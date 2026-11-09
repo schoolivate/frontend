@@ -1,6 +1,7 @@
 import { parseHTML } from 'linkedom';
-import 
-export async function renderURL(url, request){
+import { I18n, I18NLanguage } from "i18n.js";
+import routes from "renderable_routes.json" assert {type:"json"};
+export async function renderURL(url, request, langData){
     var realPath=url.pathname.replace(/^\/\w+/,"");
     realPath=(realPath.startsWith("/")?realPath:"/"+realPath)||"/";
     const headers = new Headers(request.headers);
@@ -16,5 +17,7 @@ export async function renderURL(url, request){
     if (["HEAD","OPTIONS"].includes(request.method)) return response;
     const data = await response.text();
     const {document} = parseHTML(data);
-    
+    const i18n = new I18n(document,{
+        getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code))
+    });
 }
