@@ -340,7 +340,8 @@ class BCP47 {
 }
 class I18N{
     #isSupported;#fetchLanguage;#languages;#currentLanguage;#variables;#formatters;
-    constructor(options){
+    constructor(document,options){
+        this.document=document;
         validate(options,"object","options");
         if (!isPlainObject(options)) throw new TypeError("Parameter 'options' must be a plain object.");
         const allowed_keys=["getSupport","getData","onLabelFailure","variables","formatters"];
@@ -436,7 +437,7 @@ class I18N{
         return this.#resolveLabel(label,this.#currentLanguage.getRule(label));
     }
     updateAllElements(){
-        Array.from(document.querySelectorAll("[data-i18n-label]")).forEach(el=>{
+        Array.from(this.document.querySelectorAll("[data-i18n-label]")).forEach(el=>{
             if (el.dataset.i18nTarget=="replace") {
                 if(el.dataset.i18nOriginal){
                     el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
@@ -505,7 +506,7 @@ class I18N{
         this.#variables[name]=String(value);
     }
     createText(label,target="text",replaceValue=""){
-        const el=document.createElement("span");
+        const el=this.document.createElement("span");
         el.dataset.i18nLabel=label;
         el.dataset.i18nTarget=target;
         if (target=="replace") {
