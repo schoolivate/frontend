@@ -1,35 +1,31 @@
-export function middleware(request) {
+const languagelessPaths=["assets","api","lib"];
+export async function middleware(request) {
   const url = new URL(request.url);
   const pathname = url.pathname;
-
-  // 1. Skip static assets, API routes, and already-prefixed paths
-  if (
-    pathname.startsWith('/en') || 
-    pathname.startsWith('/ar') || 
-    pathname.startsWith('/assets') || 
-    pathname.startsWith('/api') ||
-    pathname.includes('.') // skips files like favicon.ico, manifest.json
-  ) {
-    return; // Pass through untouched
-  }
-
-  // 2. Check if the user has a saved language preference cookie
-  const cookieLang = request.cookies.get('schoolivate_lang')?.value;
-  if (cookieLang === 'ar' || cookieLang === 'en') {
-    url.pathname = `/${cookieLang}${pathname}`;
+  const langData = await(await fetch("https://schoolivate.vercel.app/assets/lang/config.json")).json();
+  const prefixes = langData.languages.map(lang=>lang.code);
+  
+  const firstPathPart = url.pathname.split("/").filter(Boolean)[0]||"";
+  const secondPathPart = url.pathname.split("/").filter(Boolean)[1]||"";
+  var languageUsed = "";
+  if (prefixes.includes(firstPathPart)) languageUsed=firstPathPart;
+  if (languageUsed&&languagelessPaths.includes(secondPathPart)) {
+    url.pathname = pathname.replace(new RegExp("^\\/?"+languageUsed+"\\/?"),"/");
     return Response.redirect(url, 302);
   }
-
-  // 3. Fallback: Sniff browser Accept-Language header for first-time visitors
-  const acceptLang = request.headers.get('accept-language') || '';
-  const isArabic = acceptLang.toLowerCase().includes('ar');
-  const targetLang = isArabic ? 'ar' : 'en';
-
-  url.pathname = `/${targetLang}${pathname}`;
+  const cookieLang = request.cookies.get('schoolivate_lang')?.value;
+  if (prefixes.includes(cookieLang)) {
+    url.pathname = `/${cookieLang}${pathname.startsWith("/")?pathname:"/"+pathname}`;
+    return Response.redirect(url, 302);
+  } else if (cookieLang) {
+    url.pathname = `/${langData.default}${pathname.startsWith("/")?pathname:"/"+pathname}`;
+    return Response.redirect(url, 302);
+  }
+  const acceptLang = (request.headers.get('accept-language') || langData.default).toLowerCase();
+  const targetLang = acceptLang[0]+acceptLang[1];
+  url.pathname = `/${targetLang}${pathname.startsWith("/")?pathname:"/"+pathname}`;
   return Response.redirect(url, 302);
 }
-
-// Config to control which routes trigger the middleware
 export const config = {
-  matcher: ['/((?!api|assets|lib).*)'],
+  matcher: ['/((?!api|assets|lib).*)']
 };
