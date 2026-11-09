@@ -1,5 +1,5 @@
 const languagelessPaths=["assets","api","lib"];
-export async function middleware(request) {
+export default async function middleware(request) {
   const url = new URL(request.url);
   const pathname = url.pathname;
   const langData = await(await fetch("https://schoolivate.vercel.app/assets/lang.config.json")).json();
@@ -11,7 +11,7 @@ export async function middleware(request) {
   if (languageUsed&&languagelessPaths.includes(secondPathPart)) {
     url.pathname = pathname.replace(new RegExp("^\\/?"+languageUsed+"\\/?"),"/");
     return Response.redirect(url, 302);
-  }
+  } else if (languageUsed) return;
   const cookieLang = request.cookies.get('schoolivate_lang')?.value;
   if (prefixes.includes(cookieLang)) {
     url.pathname = `/${cookieLang}${pathname.startsWith("/")?pathname:"/"+pathname}`;
