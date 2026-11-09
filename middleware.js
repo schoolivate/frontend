@@ -13,7 +13,7 @@ export default async function middleware(request) {
   if (languageUsed&&languagelessPaths.includes(secondPathPart)) {
     url.pathname = pathname.replace(new RegExp("^\\/?"+languageUsed+"\\/?"),"/");
     return Response.redirect(url, 302);
-  } else if (languageUsed) return await render(url,request);
+  } else if (languageUsed) return await renderURL(url,request);
   const cookieHeader = (request.headers.get ? request.headers.get('cookie') : request.headers['cookie']) || "";
   const cookies = Object.fromEntries(
     cookieHeader.split(';').map(c => {
