@@ -13,5 +13,6 @@
             "lang_file":"ar.lang"
         }
     ],
-    "default":"en"
+    "default":"en",
+    "languageless":["assets","api","lib"]
 }
