@@ -1,3 +1,3 @@
-export async function render(url, request){
+export async function renderURL(url, request){
     
 }
