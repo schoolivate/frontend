@@ -3,6 +3,7 @@ import {renderURL} from "server/render.js";
 const langData = await(await fetch("https://schoolivate.vercel.app/assets/lang.config.json")).json();
 const languagelessPaths=langData.languageless;
 export default async function middleware(request) {
+  if ((request.headers.get ? request.headers.get('x-internal-request') : request.headers['x-internal-request'])=="1") return;
   const url = new URL(request.url);
   const pathname = url.pathname;
   const prefixes = langData.languages.map(lang=>lang.code);
