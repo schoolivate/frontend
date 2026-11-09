@@ -561,6 +561,4 @@ Object.freeze(BCP47.prototype);
 Object.freeze(I18NLanguage.prototype);
 return [I18N,I18NLanguage,BCP47];
 })();
-export I18N;
-export I18NLanguage;
-export BCP47;
+export default ({I18N, I18NLanguage, BCP47});
