@@ -1,4 +1,5 @@
 import { parseHTML } from 'linkedom';
+import 
 export async function renderURL(url, request){
     var realPath=url.pathname.replace(/^\/\w+/,"");
     realPath=(realPath.startsWith("/")?realPath:"/"+realPath)||"/";
@@ -14,5 +15,6 @@ export async function renderURL(url, request){
     const response = await fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
     if (["HEAD","OPTIONS"].includes(request.method)) return response;
     const data = await response.text();
-    //...
+    const {document} = parseHTML(data);
+    
 }
