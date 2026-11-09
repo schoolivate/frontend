@@ -1,0 +1,9 @@
+{
+  "name": "schoolivate",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "linkedom": "^0.18.15"
+  }
+}
