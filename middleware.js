@@ -12,7 +12,14 @@ export default async function middleware(request) {
     url.pathname = pathname.replace(new RegExp("^\\/?"+languageUsed+"\\/?"),"/");
     return Response.redirect(url, 302);
   } else if (languageUsed) return;
-  const cookieLang = request.cookies.get('schoolivate_lang')?.value;
+  const cookieHeader = (request.headers.get ? request.headers.get('cookie') : request.headers['cookie']) || "";
+  const cookies = Object.fromEntries(
+    cookieHeader.split(';').map(c => {
+      const [key, ...v] = c.trim().split('=');
+      return [key, v.join('=')];
+    })
+  );
+  const cookieLang = cookies['schoolivate_lang'];
   if (prefixes.includes(cookieLang)) {
     url.pathname = `/${cookieLang}${pathname.startsWith("/")?pathname:"/"+pathname}`;
     return Response.redirect(url, 302);
