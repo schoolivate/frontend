@@ -437,15 +437,15 @@ class I18N{
     }
     updateAllElements(){
         Array.from(document.querySelectorAll("[data-i18n-label]")).forEach(el=>{
-            if (el.dataset["i18n-target"]=="replace") {
-                if(el.dataset["i18n-original"]){
-                    el.innerText=el.dataset["i18n-original"].replaceAll("|||i18n-replace|||",this.resolve(el.dataset["i18n-label"]));
+            if (el.dataset.i18nTarget=="replace") {
+                if(el.dataset.i18nOriginal){
+                    el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
                 } else {
-                    el.dataset["i18n-original"]=el.innerText;
-                    el.innerText=el.dataset["i18n-original"].replaceAll("|||i18n-replace|||",this.resolve(el.dataset["i18n-label"]));
+                    el.dataset.i18nOriginal=el.innerText;
+                    el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
                 }
             } 
-            else el[{"text":"innerText","content":"content"}[el.dataset["i18n-target"]]||"innerText"]=this.resolve(el.dataset["i18n-label"]);
+            else el[{"text":"innerText","content":"content"}[el.dataset.i18nTarget]||"innerText"]=this.resolve(el.dataset.i18nLabel);
         });
     }
     #resolveLabel(label, rule){
@@ -506,13 +506,13 @@ class I18N{
     }
     createText(label,target="text",replaceValue=""){
         const el=document.createElement("span");
-        el.dataset["i18n-label"]=label;
-        el.dataset["i18n-target"]=target;
+        el.dataset.i18nLabel=label;
+        el.dataset.i18nTarget=target;
         if (target=="replace") {
-            el.dataset["i18n-original"]=replaceValue;
-            el.innerText=el.dataset["i18n-original"].replaceAll("|||i18n-replace|||",this.resolve(label));
+            el.dataset.i18nOriginal=replaceValue;
+            el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(label));
         } 
-        else el[{"text":"innerText","content":"content"}[el.dataset["i18n-target"]]||"innerText"]=this.resolve(label);
+        else el[{"text":"innerText","content":"content"}[el.dataset.i18nTarget]||"innerText"]=this.resolve(label);
         return el;
     }
 }
