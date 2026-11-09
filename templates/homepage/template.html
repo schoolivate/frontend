@@ -22,25 +22,52 @@
         <meta property="og:site_name" content="Schoolivate">
         <meta property="og:locale" content="[[[LANG_AREA]]">
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="icon" href="/assets/images/favicon.ico" sizes="any">
+        <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
         <link rel="manifest" href="/site.webmanifest">
         [[[META_THEME_COLOR]]]
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="/fonts/main-font.woff2" as="font" type="font/woff2" crossorigin>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="preload" href="/assets/fonts/main-font.woff2" as="font" type="font/woff2" crossorigin>
 
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Schoolivate",
-            "url": "https://schoolivate.vercel.app",
-            "logo": "https://schoolivate.vercel.app/logo.png"
-        }
-        </script>
+        <script type="application/ld+json" data-i18n-label="page.title" target="replace">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://schoolivate.vercel.app/#organization",
+      "name": "Schoolivate",
+      "url": "https://schoolivate.vercel.app",
+      "logo": "https://schoolivate.vercel.app/assets/images/logo.png"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://schoolivate.vercel.app/#website",
+      "url": "https://schoolivate.vercel.app",
+      "name": "Schoolivate",
+      "publisher": {
+        "@id": "https://schoolivate.vercel.app/#organization"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://schoolivate.vercel.app/current-page#webpage",
+      "url": "https://schoolivate.vercel.app/current-page",
+      "name": |||i18n-replace|||,
+      "isPartOf": {
+        "@id": "https://example.com/#website"
+      },
+      "about": {
+        "@id": "https://example.com/#organization"
+      }
+    }
+  ]
+}
+</script>
+
     </head>
     <body>
         <!---->
