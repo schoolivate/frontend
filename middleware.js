@@ -11,7 +11,8 @@ export default async function middleware(request) {
   const secondPathPart = url.pathname.split("/").filter(Boolean)[1]||"";
   var languageUsed = "";
   if (prefixes.includes(firstPathPart)) languageUsed=firstPathPart;
-  if (languageUsed&&languagelessPaths.includes(secondPathPart)) {
+  if (!languageUsed&&languagelessPaths.includes(secondPathPart)) return; 
+  else if (languageUsed&&languagelessPaths.includes(secondPathPart)) {
     url.pathname = pathname.replace(new RegExp("^\\/?"+languageUsed+"\\/?"),"/");
     return Response.redirect(url, 302);
   } else if (languageUsed) return await renderURL(url,request);
