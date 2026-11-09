@@ -14,5 +14,9 @@
         }
     ],
     "default":"en",
-    "languageless":["assets","api","lib"]
+    "languageless":[
+        "assets",
+        "api",
+        "lib"
+    ]
 }
