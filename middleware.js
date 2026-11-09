@@ -4,7 +4,6 @@ export async function middleware(request) {
   const pathname = url.pathname;
   const langData = await(await fetch("https://schoolivate.vercel.app/assets/lang/config.json")).json();
   const prefixes = langData.languages.map(lang=>lang.code);
-  
   const firstPathPart = url.pathname.split("/").filter(Boolean)[0]||"";
   const secondPathPart = url.pathname.split("/").filter(Boolean)[1]||"";
   var languageUsed = "";
