@@ -339,12 +339,12 @@ class BCP47 {
     }
 }
 class I18N{
-    #isSupported;#fetchLanguage;#languages;#currentLanguage;#variables;#formatters;
+    #isSupported;#fetchLanguage;#languages;#currentLanguage;#init_params;
     constructor(document,options){
         this.document=document;
         validate(options,"object","options");
         if (!isPlainObject(options)) throw new TypeError("Parameter 'options' must be a plain object.");
-        const allowed_keys=["getSupport","getData","onLabelFailure","variables","formatters"];
+        const allowed_keys=["getSupport","getData","onLabelFailure","init_params"];
         for(var key of Object.keys(options)){
             if (!allowed_keys.includes(key)) throw new TypeError (`Unrecognised option '${key}'.`);
         }
@@ -357,22 +357,14 @@ class I18N{
         validate(opts.getSupport,"function","options.getSupport");
         validate(opts.getData,"function","options.getData");
         validate(opts.onLabelFailure,"function","options.onLabelFailure");
-        if (opts.variables) validate(opts.variables,"object","options.variables");
-        else opts.variables={};
-        if (opts.formatters) {
-            validate(opts.formatters,"object","options.formatters");
-            for(var key of Object.keys(opts.formatters)){
-                if (typeof key!=="string") throw new TypeError(`Formatter keys must be strings.`);
-                validate(opts.formatters[key],"function",`options.formatters[${key}]`);
-            }
-        } else opts.formatters={};
+        if (opts.init_params) validate(opts.init_params,"object","options.init_params");
+        else opts.init_params={};
         this.#isSupported=opts.getSupport;
         this.#onLabelFailure=opts.onLabelFailure;
         this.#fetchLanguage=(async code=>(await opts.getData(code)));
         this.#languages=[];
         this.#currentLanguage=null;
-        this.#variables=opts.variables;
-        this.#formatters=opts.formatters;
+        this.#init_params=opts.init_params;
         Object.preventExtensions(this);
     }
     getLanguage(code){
@@ -402,11 +394,6 @@ class I18N{
         var res=new I18NLanguage(this,code,data);
         this.#languages.push(res);
         return res;
-    }
-    getPreferredLanguages(filter=true){
-        validate(filter,"boolean","filter");
-        var t=this.#isSupported;
-        return (navigator?.languages||[]).filter(filter?c=>t(c):()=>true);
     }
     setCurrentLanguage(lang){
         if (typeof lang==="string") lang=this.#languages.find(l=>l.code===lang);
@@ -498,12 +485,9 @@ class I18N{
                 if (parts[0]=="wbr") return "\u200B";
                 if (parts[0]=="shy") return "\u00AD";
             } 
-            return parts.length==1?(this.#variables[parts[0]]??"${"+parts[0]+"}"):(this.#formatters[parts[1]]??((v)=>v))(this.#variables[parts[0]]??"${"+parts[0]+"}");
+            return this.#init_params[parts.join(":")]||"${"+parts.join(":")+"}";
         }
         return out;
-    }
-    setVariable(name,value){
-        this.#variables[name]=String(value);
     }
     createText(label,target="text",replaceValue=""){
         const el=this.document.createElement("span");
