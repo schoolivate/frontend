@@ -351,7 +351,7 @@ class I18N{
         var opts={
             getSupport:code=>false,
             getData:async code=>"",
-            onLabelFailure:(code,label,reason)=>{console.warn(`Failed to compute label '${label}' in language '${code}'. Reason: ${reason}`);return code+":"+label},
+            onLabelFailure:(code,label,reason)=>{/*console.warn(`Failed to compute label '${label}' in language '${code}'. Reason: ${reason}`);return code+":"+label*/},
             ...options
         }
         validate(opts.getSupport,"function","options.getSupport");
