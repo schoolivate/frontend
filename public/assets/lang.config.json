@@ -4,13 +4,15 @@
             "code":"en",
             "region":"US",
             "path_prefix":"en",
-            "lang_file":"en.lang"
+            "lang_file":"en.lang",
+            "rtl":false
         },
         {
             "code":"ar",
             "region":"EG",
             "path_prefix":"ar",
-            "lang_file":"ar.lang"
+            "lang_file":"ar.lang",
+            "rtl":true
         }
     ],
     "default":"en",
