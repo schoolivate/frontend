@@ -437,7 +437,8 @@ class I18N{
     }
     updateAllElements(){
         Array.from(document.querySelectorAll("[data-i18n-label]")).forEach(el=>{
-            if (el.dataset.i18nTarget=="replace") {
+            const target=el.dataset.i18nTarget;
+            if (target=="replace") {
                 if(el.dataset.i18nOriginal){
                     el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
                 } else {
@@ -445,7 +446,8 @@ class I18N{
                     el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
                 }
             } 
-            else el[{"text":"innerText","content":"content"}[el.dataset.i18nTarget]||"innerText"]=this.resolve(el.dataset.i18nLabel);
+            else if (target==="text") el.innerText=this.resolve(el.dataset.i18nLabel);
+            else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(el.dataset.i18nLabel));
         });
     }
     #resolveLabel(label, rule){
@@ -512,7 +514,8 @@ class I18N{
             el.dataset.i18nOriginal=replaceValue;
             el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(label));
         } 
-        else el[{"text":"innerText","content":"content"}[el.dataset.i18nTarget]||"innerText"]=this.resolve(label);
+        else if (target==="text") el.innerText=this.resolve(label);
+            else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(label));
         return el;
     }
 }
