@@ -1,6 +1,7 @@
 import { parseHTML } from 'linkedom';
 import { I18n, I18NLanguage } from "i18n.js";
 import routes from "renderable_routes.json" assert {type:"json"};
+
 export async function renderURL(url, request, langData){
     var realPath=url.pathname.replace(/^\/\w+/,"");
     realPath=(realPath.startsWith("/")?realPath:"/"+realPath)||"/";
@@ -15,7 +16,7 @@ export async function renderURL(url, request, langData){
       fetchOptions.body = request.body;
     }
     const response = await fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
-    if (["HEAD","OPTIONS"].includes(request.method)) return response;
+    if (["HEAD","OPTIONS"].includes(request.method)||!routes.public.includes(realPath)) return response;
     const template = await response.text();
     const html = fillTemplate(template);
     const {document} = parseHTML(html);
