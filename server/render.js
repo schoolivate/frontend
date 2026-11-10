@@ -12,8 +12,13 @@ function fillTemplate(template,lang,url,realPath,langData){
 }
 function generateAlternates(langData,lang,url,realPath){
     function once(language, target){
-        return `        <link rel="alternate" herflang="${language}" href="${escapeHTML(target)}>`
+        return `        <link rel="alternate" herflang="${language}" href="${escapeHTML(target)}>\n`
     }
+    var res=once("x-default","https://schoolivate.vercel.app/"+langData.default+realPath+url.search);
+    for(const pl of langData.languages){
+        res+=once(pl.code,"https://schoolivate.vercel.app/"+pl.code+realPath+url.search);
+    }
+    return res;
 }
 function escapeHTML(str){
     return str.replace(/[&<>'"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'}[c]));
