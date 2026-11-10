@@ -1,12 +1,26 @@
 import { parseHTML } from 'linkedom';
 import { I18n, I18NLanguage } from "i18n.js";
 import routes from "renderable_routes.json" assert {type:"json"};
-function fillTemplate(template,lang,url){
+function fillTemplate(template,lang,url,realPath,langData){
     return template
         .replaceAll("[[[LANG]]]",lang.code)
         .replaceAll("[[[DIR]]]]",lang.rtl?"rtl":"ltr")
         .replaceAll("[[[LANG_AREA]]]",lang.code+"_"+lang.region)
-        .replaceAll("[[[CURRENT_URI]]]",)
+        .replaceAll("[[[CURRENT_URI]]]", escapeHTML(realPath+url.search))
+        .replaceAll("[[[ORIGINAL_URI]]]", escapeHTML(realPath+cleanParams(url).search))
+        .replaceAll("[[[LINK_REL_ALTERNATE]]]",generateAlternates(langData,lang,url,realPath))
+}
+function generateAlternates(langData,lang,url,realPath){
+    function once(language, target){
+        return `        <link rel="alternate" herflang="${language}" href="${escapeHTML(target)}>`
+    }
+}
+function escapeHTML(str){
+    return str.replace(/[&<>'"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'}[c]));
+}
+function cleanParams(url){
+    //...
+    return url;
 }
 export async function renderURL(url, request, langData){
     var realPath=url.pathname.replace(/^\/\w+/,"");
@@ -25,7 +39,7 @@ export async function renderURL(url, request, langData){
     const response = await fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
     if (["HEAD","OPTIONS"].includes(request.method)||!routes.public.includes(realPath)) return response;
     const template = await response.text();
-    const html = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url);
+    const html = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData);
     const {document} = parseHTML(html);
     const i18n = new I18n(document,{
         getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
