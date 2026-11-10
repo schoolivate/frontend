@@ -1,9 +1,12 @@
 import { parseHTML } from 'linkedom';
 import { I18n, I18NLanguage } from "i18n.js";
 import routes from "renderable_routes.json" assert {type:"json"};
-function fillTemplate(template){
+function fillTemplate(template,lang,url){
     return template
-        .replace("[[")
+        .replaceAll("[[[LANG]]]",lang.code)
+        .replaceAll("[[[DIR]]]]",lang.rtl?"rtl":"ltr")
+        .replaceAll("[[[LANG_AREA]]]",lang.code+"_"+lang.region)
+        .replaceAll("[[[CURRENT_URI]]]",)
 }
 export async function renderURL(url, request, langData){
     var realPath=url.pathname.replace(/^\/\w+/,"");
@@ -22,7 +25,7 @@ export async function renderURL(url, request, langData){
     const response = await fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
     if (["HEAD","OPTIONS"].includes(request.method)||!routes.public.includes(realPath)) return response;
     const template = await response.text();
-    const html = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed));
+    const html = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url);
     const {document} = parseHTML(html);
     const i18n = new I18n(document,{
         getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
