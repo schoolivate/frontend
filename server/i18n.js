@@ -425,7 +425,8 @@ class I18N{
     }
     updateAllElements(){
         Array.from(this.document.querySelectorAll("[data-i18n-label]")).forEach(el=>{
-            if (el.dataset.i18nTarget=="replace") {
+            const target=el.dataset.i18nTarget;
+            if (target=="replace") {
                 if(el.dataset.i18nOriginal){
                     el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
                 } else {
