@@ -16,8 +16,9 @@ export async function renderURL(url, request, langData){
     }
     const response = await fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
     if (["HEAD","OPTIONS"].includes(request.method)) return response;
-    const data = await response.text();
-    const {document} = parseHTML(data);
+    const template = await response.text();
+    const html = fillTemplate(template);
+    const {document} = parseHTML(html);
     const i18n = new I18n(document,{
         getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
         getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
