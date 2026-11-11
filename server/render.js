@@ -1,6 +1,8 @@
 import { parseHTML } from 'linkedom';
 import { I18n, I18NLanguage } from "./i18n.js";
-import routes from "./renderable_routes.json" with {type:"json"};
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+const routes = require("./renderable_routes.json");
 function fillTemplate(template,lang,url,realPath,langData,cookies){
     return template
         .replaceAll("[[[LANG]]]",lang.code)
