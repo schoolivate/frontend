@@ -6,7 +6,7 @@ export default async function middleware(request) {
   if ((request.headers.get ? request.headers.get('x-internal-request') : request.headers['x-internal-request'])=="1") return;
   const url = new URL(request.url);
   const pathname = url.pathname;
-  const langData = cachedLangData||const langData = await(await fetch("https://schoolivate.vercel.app/assets/lang.config.json")).json();
+  const langData = cachedLangData||langData = await(await fetch("https://schoolivate.vercel.app/assets/lang.config.json")).json();
   languagelessPaths=langData.languageless;
   const prefixes = langData.languages.map(lang=>lang.code);
   const firstPathPart = url.pathname.split("/").filter(Boolean)[0]||"";
