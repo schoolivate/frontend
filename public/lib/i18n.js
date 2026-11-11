@@ -339,7 +339,7 @@ class BCP47 {
     }
 }
 class I18N{
-    #isSupported;#fetchLanguage;#languages;#currentLanguage;#variables;#formatters;
+    #isSupported;#fetchLanguage;#onLabelFailure;#languages;#currentLanguage;#variables;#formatters;
     constructor(options){
         validate(options,"object","options");
         if (!isPlainObject(options)) throw new TypeError("Parameter 'options' must be a plain object.");
