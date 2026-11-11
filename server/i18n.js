@@ -1,4 +1,3 @@
-const [I18N,I18NLanguage,BCP47]=(()=>{
 function validate(value,type,label){
     if (typeof value!==type&&(type==="object"?value!==null:true)) throw new TypeError(`Parameter '${label}' must be of type '${type}', found '${typeof value}'.`) 
 }
@@ -143,7 +142,7 @@ function parseData(input = "") {
     }
     return res;
 }
-class BCP47 {
+export class BCP47 {
     constructor(){
         Object.preventExtensions(this);
     }
@@ -338,7 +337,7 @@ class BCP47 {
         }
     }
 }
-class I18N{
+export class I18N{
     #isSupported;#fetchLanguage;#onLabelFailure;#languages;#currentLanguage;#init_params;
     constructor(document,options){
         this.document=document;
@@ -504,7 +503,7 @@ class I18N{
         return el;
     }
 }
-class I18NLanguage{
+export class I18NLanguage{
     #rawData;#manager;#code;#bcp47;#hasFailed=false;#data;
     constructor(i18n,code,data){
         var validity=BCP47.isValid(code);
@@ -541,12 +540,3 @@ class I18NLanguage{
         return this.#data[label];
     }
 }
-Object.freeze(I18N);
-Object.freeze(BCP47);
-Object.freeze(I18NLanguage);
-Object.freeze(I18N.prototype);
-Object.freeze(BCP47.prototype);
-Object.freeze(I18NLanguage.prototype);
-return [I18N,I18NLanguage,BCP47];
-})();
-export {I18N, I18NLanguage, BCP47};
