@@ -440,13 +440,13 @@ class I18N{
             const target=el.dataset.i18nTarget||"";
             if (target=="replace") {
                 if(el.dataset.i18nOriginal){
-                    el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
+                    el.textContent=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
                 } else {
-                    el.dataset.i18nOriginal=el.innerText;
-                    el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
+                    el.dataset.i18nOriginal=el.textContent;
+                    el.textContent=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
                 }
             } 
-            else if (target==="text") el.innerText=this.resolve(el.dataset.i18nLabel);
+            else if (target==="text") el.textContent=this.resolve(el.dataset.i18nLabel);
             else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(el.dataset.i18nLabel));
         });
     }
@@ -512,9 +512,9 @@ class I18N{
         el.dataset.i18nTarget=target;
         if (target=="replace") {
             el.dataset.i18nOriginal=replaceValue;
-            el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(label));
+            el.textContent=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(label));
         } 
-        else if (target==="text") el.innerText=this.resolve(label);
+        else if (target==="text") el.textContent=this.resolve(label);
         else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(label));
         return el;
     }
