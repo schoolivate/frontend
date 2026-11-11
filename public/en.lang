@@ -1,0 +1,14 @@
+;; ==========================================
+;; Schoolivate - English Language File (en)
+;; ==========================================
+
+;; Page Metadata & SEO Labels
+page.title = Schoolivate - Home
+page.description = The official student-run platform for school announcements, activities, and community coordination.
+
+;; Open Graph (OG) Social Card Labels
+page.og.title = Schoolivate - Home
+page.og.description = The official student-run platform for school announcements, activities, and community coordination.
+page.og.image.url = https://schoolivate.vercel.app/assets/images/og-cover.png
+page.og.image.width = 1200
+page.og.image.height = 630
