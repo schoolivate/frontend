@@ -34,7 +34,7 @@ export default async function middleware(request) {
     return Response.redirect(url, 302);
   }
   const acceptLangs = parseAcceptLanguage((request.headers.get('accept-language') || langData.default));
-  const targetLang = acceptLangs.filter(lang=>prefixes.includes(lang.range)||prefixes.includes(lang.range.split(/-|_/)[0]))[0].range;
+  const targetLang = acceptLangs.filter(lang=>prefixes.includes(lang.range)||prefixes.includes(lang.range.split(/-|_/)[0]))[0]?.range||langData.default;
   url.pathname = `/${prefixes.includes(targetLang)?targetLang:targetLang.split(/-|_/)[0]}${pathname.startsWith("/")?pathname:"/"+pathname}`;
   return Response.redirect(url, 302);
 }
