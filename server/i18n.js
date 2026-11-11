@@ -339,7 +339,7 @@ class BCP47 {
     }
 }
 class I18N{
-    #isSupported;#fetchLanguage;#languages;#currentLanguage;#init_params;
+    #isSupported;#fetchLanguage;#onLabelFailure;#languages;#currentLanguage;#init_params;
     constructor(document,options){
         this.document=document;
         validate(options,"object","options");
