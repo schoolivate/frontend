@@ -1,7 +1,7 @@
 import { parseHTML } from 'linkedom';
 import { I18n, I18NLanguage } from "i18n.js";
 import routes from "renderable_routes.json" assert {type:"json"};
-function fillTemplate(template,lang,url,realPath,langData){
+function fillTemplate(template,lang,url,realPath,langData,cookies){
     return template
         .replaceAll("[[[LANG]]]",lang.code)
         .replaceAll("[[[DIR]]]]",lang.rtl?"rtl":"ltr")
@@ -9,6 +9,8 @@ function fillTemplate(template,lang,url,realPath,langData){
         .replaceAll("[[[CURRENT_URI]]]", escapeHTML(realPath+url.search))
         .replaceAll("[[[ORIGINAL_URI]]]", escapeHTML(realPath+cleanParams(url).search))
         .replaceAll("[[[LINK_REL_ALTERNATE]]]",generateAlternates(langData,lang,url,realPath))
+        .replaceAll("[[[META_THEME_COLOR]]]",generateThemes(cookies))
+        .replaceAll("[[[THEME]]]",cookies["schoolivate_theme"]||"system")
 }
 function generateAlternates(langData,lang,url,realPath){
     function once(language, target){
@@ -20,6 +22,18 @@ function generateAlternates(langData,lang,url,realPath){
     }
     return res.join("\n        ");
 }
+function generateThemes(cookies){
+    const theme=cookies["schoolivate_theme"];
+    if (theme&&theme!="system") {
+        if (theme=="light") {
+            return `<meta name="theme-color" content="#889A7B">`
+        } else if (theme=="dark") {
+            return `<meta name="theme-color" content="#112322">`
+        } 
+    } else {
+        return `<meta name="theme-color" content="#889A7B">\n        <meta name="theme-color" content="">`
+    }
+}
 function escapeHTML(str){
     return str.replace(/[&<>'"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'}[c]));
 }
@@ -27,7 +41,7 @@ function cleanParams(url){
     //...
     return url;
 }
-export async function renderURL(url, request, langData){
+export async function renderURL(url, request, langData, cookies){
     var realPath=url.pathname.replace(/^\/\w+/,"");
     realPath=(realPath.startsWith("/")?realPath:"/"+realPath)||"/";
     realPath=realPath.endsWith("/")?realPath:realPath+"/";
@@ -44,7 +58,7 @@ export async function renderURL(url, request, langData){
     const response = await fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
     if (["HEAD","OPTIONS"].includes(request.method)||!routes.public.includes(realPath)) return response;
     const template = await response.text();
-    const html = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData);
+    const html = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies);
     const {document} = parseHTML(html);
     const i18n = new I18n(document,{
         getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
