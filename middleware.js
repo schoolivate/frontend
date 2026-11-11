@@ -11,20 +11,20 @@ export default async function middleware(request) {
   const secondPathPart = url.pathname.split("/").filter(Boolean)[1]||"";
   var languageUsed = "";
   if (prefixes.includes(firstPathPart)) languageUsed=firstPathPart;
-  if (!languageUsed&&languagelessPaths.includes(secondPathPart)) return; 
-  else if (languageUsed&&languagelessPaths.includes(secondPathPart)) {
-    url.pathname = pathname.replace(new RegExp("^\\/?"+languageUsed+"\\/?"),"/");
-    return Response.redirect(url, 302);
-  } else if (languageUsed) return await renderURL(url,request,langData);
-  const cookieHeader = (request.headers.get ? request.headers.get('cookie') : request.headers['cookie']) || "";
   const cookies = Object.fromEntries(
     cookieHeader.split(';').map(c => {
       const [key, ...v] = c.trim().split('=');
       return [key, v.join('=')];
     })
   );
+  if (!languageUsed&&languagelessPaths.includes(secondPathPart)) return; 
+  else if (languageUsed&&languagelessPaths.includes(secondPathPart)) {
+    url.pathname = pathname.replace(new RegExp("^\\/?"+languageUsed+"\\/?"),"/");
+    return Response.redirect(url, 302);
+  } else if (languageUsed) return await renderURL(url,request,langData,cookies);
+  const cookieHeader = (request.headers.get ? request.headers.get('cookie') : request.headers['cookie']) || "";
   const cookieLang = cookies['schoolivate_lang'];
-  if (prefixes.includes(cookieLang)) {
+  if (cookieLang&&prefixes.includes(cookieLang)) {
     url.pathname = `/${cookieLang}${pathname.startsWith("/")?pathname:"/"+pathname}`;
     return Response.redirect(url, 302);
   } else if (cookieLang) {
