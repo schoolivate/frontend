@@ -6,7 +6,7 @@ const routes = require("./renderable_routes.json");
 function fillTemplate(template,lang,url,realPath,langData,cookies){
     return template
         .replaceAll("[[[LANG]]]",lang.code)
-        .replaceAll("[[[DIR]]]]",lang.rtl?"rtl":"ltr")
+        .replaceAll("[[[DIR]]]",lang.rtl?"rtl":"ltr")
         .replaceAll("[[[LANG_AREA]]]",lang.code+"_"+lang.region)
         .replaceAll("[[[CURRENT_URI]]]", escapeHTML(realPath+url.search))
         .replaceAll("[[[ORIGINAL_URI]]]", escapeHTML(realPath+cleanParams(url).search))
