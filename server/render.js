@@ -26,12 +26,21 @@ function generateThemes(cookies){
     const theme=cookies["schoolivate_theme"];
     if (theme&&theme!="system") {
         if (theme=="light") {
-            return `<meta name="theme-color" content="#889A7B">`
+            return `<meta name="theme-color" content="#ffffff" id="meta-theme-user-light"/>
+        <meta name="disabled-theme-color" content="#121212" id="meta-theme-user-dark"/>
+        <meta name="disabled-theme-color" content="#ffffff" media="(prefers-color-scheme: light)" id="meta-theme-system-light"/>
+        <meta name="disabled-theme-color" content="#121212" media="(prefers-color-scheme: dark)" id="meta-theme-system-dark"/>`;
         } else if (theme=="dark") {
-            return `<meta name="theme-color" content="#112322">`
+            return `<meta name="disabled-theme-color" content="#ffffff" id="meta-theme-user-light"/>
+        <meta name="theme-color" content="#121212" id="meta-theme-user-dark"/>
+        <meta name="disabled-theme-color" content="#ffffff" media="(prefers-color-scheme: light)" id="meta-theme-system-light"/>
+        <meta name="disabled-theme-color" content="#121212" media="(prefers-color-scheme: dark)" id="meta-theme-system-dark"/>`;
         } 
     } else {
-        return `<meta name="theme-color" content="#889A7B">\n        <meta name="theme-color" content="">`
+        return `<meta name="disabled-theme-color" content="#ffffff" id="meta-theme-user-light"/>
+        <meta name="disabled-theme-color" content="#121212" id="meta-theme-user-dark"/>
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" id="meta-theme-system-light"/>
+        <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" id="meta-theme-system-dark"/>`
     }
 }
 function escapeHTML(str){
