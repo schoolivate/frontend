@@ -520,7 +520,7 @@ class I18N{
     }
 }
 class I18NLanguage{
-    #rawData;#manager;#code;#bcp47;#hasFailed=false;
+    #rawData;#manager;#code;#bcp47;#hasFailed=false;#data;
     constructor(i18n,code,data){
         var validity=BCP47.isValid(code);
         if (validity!==true) throw new Error("Invalid BCP-47 Language Code: "+validity);
