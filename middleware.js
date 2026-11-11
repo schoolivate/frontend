@@ -1,7 +1,7 @@
 import {parseAcceptLanguage} from "./server/utils.js";
 import {renderURL} from "./server/render.js";
 var cachedLangData=null;
-var languagelessPaths=[];
+var languagelessPaths=["assets"];
 export default async function middleware(request) {
   if ((request.headers.get ? request.headers.get('x-internal-request') : request.headers['x-internal-request'])=="1") return;
   const url = new URL(request.url);
