@@ -1,6 +1,6 @@
 import { parseHTML } from 'linkedom';
 import { I18n, I18NLanguage } from "./i18n.js";
-import routes from "./renderable_routes.json" assert {type:"json"};
+import routes from "./renderable_routes.json" with {type:"json"};
 function fillTemplate(template,lang,url,realPath,langData,cookies){
     return template
         .replaceAll("[[[LANG]]]",lang.code)
