@@ -14,7 +14,7 @@ function fillTemplate(template,lang,url,realPath,langData,cookies){
 }
 function generateAlternates(langData,lang,url,realPath){
     function once(language, target){
-        return `<link rel="alternate" herflang="${language}" href="${escapeHTML(target)}>`
+        return `<link rel="alternate" hreflang="${language}" href="${escapeHTML(target)}">`
     }
     var res=[once("x-default","https://schoolivate.vercel.app/"+langData.default+realPath+url.search)];
     for(const pl of langData.languages){
@@ -60,7 +60,7 @@ export async function renderURL(url, request, langData, cookies){
     var realPath=url.pathname.replace(/^\/\w+/,"");
     realPath=(realPath.startsWith("/")?realPath:"/"+realPath)||"/";
     realPath=realPath.endsWith("/")?realPath:realPath+"/";
-    const langUsed=utl.pathname.match(/^\/\w+/)[0].slice(1);
+    const langUsed=url.pathname.match(/^\/\w+/)[0].slice(1);
     const headers = new Headers(request.headers);
     headers.set('x-internal-request', '1');
     const fetchOptions = {
