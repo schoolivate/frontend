@@ -1,5 +1,5 @@
-import {parseAcceptLanguage} from "server/utils.js";
-import {renderURL} from "server/render.js";
+import {parseAcceptLanguage} from "./server/utils.js";
+import {renderURL} from "./server/render.js";
 var cachedLangData=null;
 var languagelessPaths=[];
 export default async function middleware(request) {
