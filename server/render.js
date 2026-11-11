@@ -80,4 +80,13 @@ export async function renderURL(url, request, langData, cookies){
         getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
         init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText),
     });
+    const l = await i18n.getLanguageAsync(langUsed);
+    l.use();
+    return new Response(document.toString(), {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'public, max-age=0, must-revalidate'
+    }
+  });
 }
