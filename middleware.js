@@ -20,7 +20,7 @@ export default async function middleware(request) {
       return [key, v.join('=')];
     })
   )
-  if (!languageUsed&&languagelessPaths.includes(secondPathPart)) return; 
+  if (!languageUsed&&languagelessPaths.includes(firstPathPart)) return; 
   else if (languageUsed&&languagelessPaths.includes(secondPathPart)) {
     url.pathname = pathname.replace(new RegExp("^\\/?"+languageUsed+"\\/?"),"/");
     return Response.redirect(url, 302);
