@@ -83,10 +83,10 @@ export async function renderURL(url, request, langData, cookies){
     const l = await i18n.getLanguageAsync(langUsed);
     l.use();
     return new Response(document.toString(), {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/html; charset=utf-8',
-      'Cache-Control': 'public, max-age=0, must-revalidate'
-    }
-  });
+        status: 200,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'public, max-age=0, must-revalidate'
+        }
+    });
 }
