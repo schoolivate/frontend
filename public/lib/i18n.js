@@ -515,7 +515,7 @@ class I18N{
             el.innerText=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(label));
         } 
         else if (target==="text") el.innerText=this.resolve(label);
-            else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(label));
+        else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(label));
         return el;
     }
 }
