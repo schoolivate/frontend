@@ -1,4 +1,4 @@
-[I18N,I18NLanguage,BCP47]=(()=>{
+const [I18N,I18NLanguage,BCP47]=(()=>{
 function validate(value,type,label){
     if (typeof value!==type&&(type==="object"?value!==null:true)) throw new TypeError(`Parameter '${label}' must be of type '${type}', found '${typeof value}'.`) 
 }
