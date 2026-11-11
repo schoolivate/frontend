@@ -1,11 +1,13 @@
 import {parseAcceptLanguage} from "server/utils.js";
 import {renderURL} from "server/render.js";
-const langData = await(await fetch("https://schoolivate.vercel.app/assets/lang.config.json")).json();
-const languagelessPaths=langData.languageless;
+var cachedLangData=null;
+var languagelessPaths=[];
 export default async function middleware(request) {
   if ((request.headers.get ? request.headers.get('x-internal-request') : request.headers['x-internal-request'])=="1") return;
   const url = new URL(request.url);
   const pathname = url.pathname;
+  const langData = cachedLangData||const langData = await(await fetch("https://schoolivate.vercel.app/assets/lang.config.json")).json();
+  languagelessPaths=langData.languageless;
   const prefixes = langData.languages.map(lang=>lang.code);
   const firstPathPart = url.pathname.split("/").filter(Boolean)[0]||"";
   const secondPathPart = url.pathname.split("/").filter(Boolean)[1]||"";
@@ -17,7 +19,7 @@ export default async function middleware(request) {
       const [key, ...v] = c.trim().split('=');
       return [key, v.join('=')];
     })
-  );
+  )
   if (!languageUsed&&languagelessPaths.includes(secondPathPart)) return; 
   else if (languageUsed&&languagelessPaths.includes(secondPathPart)) {
     url.pathname = pathname.replace(new RegExp("^\\/?"+languageUsed+"\\/?"),"/");
@@ -37,5 +39,5 @@ export default async function middleware(request) {
   return Response.redirect(url, 302);
 }
 export const config = {
-  matcher: ['/((?!('+languagelessPaths.join("|")+')(?:/|$)).*)']
+  matcher: ['/.*']
 };
