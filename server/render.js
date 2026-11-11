@@ -46,9 +46,15 @@ function generateThemes(cookies){
 function escapeHTML(str){
     return str.replace(/[&<>'"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'}[c]));
 }
-function cleanParams(url){
-    //...
-    return url;
+const ALLOWED_PARAMS = new Set(['sort', 'page', 'id']);
+function cleanParams(url) {
+    const cloned = new URL(url.toString());
+    for (const key of Array.from(cloned.searchParams.keys())) {
+        if (!ALLOWED_PARAMS.has(key)) {
+            cloned.searchParams.delete(key);
+        }
+    }
+    return cloned;
 }
 export async function renderURL(url, request, langData, cookies){
     var realPath=url.pathname.replace(/^\/\w+/,"");
