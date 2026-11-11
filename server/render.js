@@ -1,5 +1,5 @@
 import { parseHTML } from 'linkedom';
-import { I18n, I18NLanguage } from "./i18n.js";
+import { I18N, I18NLanguage } from "./i18n.js";
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const routes = require("./renderable_routes.json");
@@ -77,7 +77,7 @@ export async function renderURL(url, request, langData, cookies){
     const template = await response.text();
     const html = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies);
     const {document} = parseHTML(html);
-    const i18n = new I18n(document,{
+    const i18n = new I18N(document,{
         getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
         getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
         init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText),
