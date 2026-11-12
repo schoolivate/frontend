@@ -75,7 +75,7 @@ function cleanParams(url) {
 export async function renderURL(url, request, langData, cookies){
     var realPath=url.pathname.replace(/^\/\w+/,"");
     realPath=(realPath.startsWith("/")?realPath:"/"+realPath)||"/";
-    realPath=realPath.endsWith("/")?realPath:realPath+"/";
+    //realPath=realPath.endsWith("/")?realPath:realPath+"/";
     const langUsed=url.pathname.match(/^\/\w+/)[0].slice(1);
     const headers = new Headers(request.headers);
     headers.set('x-internal-request', '1');
