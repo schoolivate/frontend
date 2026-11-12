@@ -5,7 +5,6 @@
             "region":"US",
             "path_prefix":"en",
             "lang_file":"en.lang",
-            "init_params":"en.params.js",
             "rtl":false
         },
         {
@@ -13,7 +12,6 @@
             "region":"EG",
             "path_prefix":"ar",
             "lang_file":"ar.lang",
-            "init_params":"ar.params.js",
             "rtl":true
         }
     ],

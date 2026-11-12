@@ -106,7 +106,7 @@ export async function renderURL(url, request, langData, cookies){
     const i18n = new I18N(document,{
         getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
         getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
-        init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText),
+        init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)[langUsed]||{},
     });
     const l = await i18n.getLanguageAsync(langUsed);
     l.use();
