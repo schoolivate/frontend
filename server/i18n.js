@@ -423,6 +423,7 @@ export class I18N{
         return this.#resolveLabel(label,this.#currentLanguage.getRule(label));
     }
     updateAllElements(){
+        if(!this.document) return;
         Array.from(this.document.querySelectorAll("[data-i18n-label]")).forEach(el=>{
             const target=el.dataset.i18nTarget||"";
             if (target=="replace") {

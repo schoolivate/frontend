@@ -108,7 +108,7 @@ export async function renderURL(url, request, langData, cookies){
         const i18n = new I18N(document,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
             getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
-            init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)[langUsed]||{},
+            init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)[langUsed]||{}
         });
         const l = await i18n.getLanguageAsync(langUsed);
         l.use();
@@ -119,12 +119,23 @@ export async function renderURL(url, request, langData, cookies){
                 'Cache-Control': 'public, max-age=0, must-revalidate'
             }
         });
+    } else {
+        const i18n = new I18N(null,{
+            getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
+            getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath.replace(/\/[^\/]+$/,"/")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
+            init_params:{}
+        });
+        const l = await i18n.getLanguageAsync(langUsed);
+        l.use();
+        const localized=data.replace(/i18n=[^"\/']/g,m=>{
+            return i18n.resolve(m.replace(/^i18n=/,""));
+        });
+        const genericHeaders = new Headers(response.headers);
+        genericHeaders.delete('content-encoding');
+        genericHeaders.delete('content-length');
+        return new Response(localized, {
+            status: response.status,
+            headers: genericHeaders
+        });
     }
-    const genericHeaders = new Headers(response.headers);
-    genericHeaders.delete('content-encoding');
-    genericHeaders.delete('content-length');
-    return new Response(data, {
-        status: response.status,
-        headers: genericHeaders
-    });
 }

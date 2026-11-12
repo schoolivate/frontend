@@ -1,13 +1,13 @@
 {
   "id": "/",
-  "name": "Schoolivate",
-  "short_name": "Schoolivate",
-  "description": "test...",
-  "lang": "en",
-  "dir": "ltr",
+  "name": "i18n=manifest.name",
+  "short_name": "i18n=manifest.name.short",
+  "description": "i18n=manifest.description",
+  "lang": "[[[LANG]]]",
+  "dir": "[[[DIR]]]",
 
-  "start_url": "/en/",
-  "scope": "/en/",
+  "start_url": "/[[[LANG]]]/",
+  "scope": "/",
 
   "display": "standalone",
   "display_override": [
@@ -16,11 +16,11 @@
   ],
   "orientation": "any",
 
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "[[[LIGHT_THEME_COLOR]]]",
+  "background_color": "[[[LIGHT_THEME_COLOR]]]",
   "color_scheme_dark": {
-    "theme_color": "#121212",
-    "background_color": "#121212"
+    "theme_color": "[[[DARK_THEME_COLOR]]]",
+    "background_color": "[[[DARK_THEME_COLOR]]]"
   },
 
   "categories": [
