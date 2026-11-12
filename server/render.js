@@ -101,8 +101,9 @@ export async function renderURL(url, request, langData, cookies){
             headers: cleanHeaders
         });
     }
-    const template = await response.text();
-    const data = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies);
+    const isText=response.headers.get("content-type".startsWith("text/"));
+    const template = await response[isText?"text":"arrayBuffer"]();
+    const data = isText?fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies):template;
     if(!hasFileExtension){
         const {document} = parseHTML(data);
         const i18n = new I18N(document,{
@@ -119,7 +120,7 @@ export async function renderURL(url, request, langData, cookies){
                 'Cache-Control': 'public, max-age=0, must-revalidate'
             }
         });
-    } else {
+    } else if (isText) {
         const i18n = new I18N(null,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
             getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath.replace(/\/[^\/]+$/,"/")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
@@ -134,6 +135,14 @@ export async function renderURL(url, request, langData, cookies){
         genericHeaders.delete('content-encoding');
         genericHeaders.delete('content-length');
         return new Response(localized, {
+            status: response.status,
+            headers: genericHeaders
+        });
+    } else {
+        const genericHeaders = new Headers(response.headers);
+        genericHeaders.delete('content-encoding');
+        genericHeaders.delete('content-length');
+        return new Response(response.body, {
             status: response.status,
             headers: genericHeaders
         });
