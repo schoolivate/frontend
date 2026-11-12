@@ -5,7 +5,10 @@ var languagelessPaths=["assets"];
 export default async function middleware(request) {
   if ((request.headers.get ? request.headers.get('x-internal-request') : request.headers['x-internal-request'])=="1") return;
   const url = new URL(request.url);
-  url.pathname=url.pathname.replace(/(index.html|index.htm)\/*$/,"");
+  if (/(index.html|index.htm)\/*$/.test(url.pathname)) {
+      url.pathname=url.pathname.replace(/(index.html|index.htm)\/*$/,"");
+      return Response.redirect(url, 302);
+  }
   const pathname = url.pathname;
   const langData = cachedLangData||await(await fetch("https://schoolivate.vercel.app/assets/lang.config.json",{headers:{"x-internal-request":"1"}})).json();
   languagelessPaths=langData.languageless;
