@@ -3,6 +3,10 @@ import { I18N, I18NLanguage } from "./i18n.js";
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const routes = require("./renderable_routes.json");
+const fs = require('fs');
+const loadingData = fs.readFileSync('./loading.html', 'utf8');
+const {loadingDocument} = parseHTML(loadingData);
+const [loadingHTML, loadingSTYLES] = [loadingDocument.querySelector("#loading-styles").innerHTML,loadingDocument.querySelector("#loading-html").innerHTML];
 function fillTemplate(template,lang,url,realPath,langData,cookies){
     return template
         .replaceAll("[[[LANG]]]",lang.code)
@@ -13,6 +17,8 @@ function fillTemplate(template,lang,url,realPath,langData,cookies){
         .replaceAll("[[[LINK_REL_ALTERNATE]]]",generateAlternates(langData,lang,url,realPath))
         .replaceAll("[[[META_THEME_COLOR]]]",generateThemes(cookies))
         .replaceAll("[[[THEME]]]",cookies["schoolivate_theme"]||"system")
+        .replaceAll("[[[LOADING_STYLES]]]",loadingSTYLES)
+        .replaceAll("[[[LOADING_HTML]]]",loadingHTML)
 }
 function generateAlternates(langData,lang,url,realPath){
     function once(language, target){
