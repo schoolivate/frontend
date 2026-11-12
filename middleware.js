@@ -5,6 +5,7 @@ var languagelessPaths=["assets"];
 export default async function middleware(request) {
   if ((request.headers.get ? request.headers.get('x-internal-request') : request.headers['x-internal-request'])=="1") return;
   const url = new URL(request.url);
+  url.pathname=url.pathname.replace(/(index.html|index.htm)\/*$/,"");
   const pathname = url.pathname;
   const langData = cachedLangData||await(await fetch("https://schoolivate.vercel.app/assets/lang.config.json",{headers:{"x-internal-request":"1"}})).json();
   languagelessPaths=langData.languageless;
