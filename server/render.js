@@ -98,7 +98,6 @@ export async function renderURL(url, request, langData, cookies){
         cleanHeaders.delete('content-length');
         return new Response(response.body, {
             status: response.status,
-            statusText: response.statusText,
             headers: cleanHeaders
         });
     }
@@ -113,12 +112,19 @@ export async function renderURL(url, request, langData, cookies){
         });
         const l = await i18n.getLanguageAsync(langUsed);
         l.use();
+        return new Response(document.toString(), {
+            status: 200,
+            headers: {
+                'Content-Type': 'text/html; charset=utf-8',
+                'Cache-Control': 'public, max-age=0, must-revalidate'
+            }
+        });
     }
-    return new Response(document.toString(), {
-        status: 200,
-        headers: {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Cache-Control': 'public, max-age=0, must-revalidate'
-        }
+    const genericHeaders = new Headers(response.headers);
+    genericHeaders.delete('content-encoding');
+    genericHeaders.delete('content-length');
+    return new Response(data, {
+        status: response.status,
+        headers: genericHeaders
     });
 }
