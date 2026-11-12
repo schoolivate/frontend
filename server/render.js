@@ -75,7 +75,10 @@ function cleanParams(url) {
 export async function renderURL(url, request, langData, cookies){
     var realPath=url.pathname.replace(/^\/\w+/,"");
     realPath=(realPath.startsWith("/")?realPath:"/"+realPath)||"/";
-    //realPath=realPath.endsWith("/")?realPath:realPath+"/";
+    const hasFileExtension = /\.[a-zA-Z0-9]+$/.test(realPath);
+    if (!hasFileExtension && !realPath.endsWith("/")) {
+        realPath += "/";
+    }
     const langUsed=url.pathname.match(/^\/\w+/)[0].slice(1);
     const headers = new Headers(request.headers);
     headers.set('x-internal-request', '1');
@@ -87,7 +90,16 @@ export async function renderURL(url, request, langData, cookies){
       fetchOptions.body = request.body;
     }
     const response = await fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
-    if (["HEAD","OPTIONS"].includes(request.method)||!routes.public.includes(realPath)) return response;
+    if (["HEAD","OPTIONS"].includes(request.method)||!routes.public.includes(realPath)) {
+        const cleanHeaders = new Headers(response.headers);
+        cleanHeaders.delete('content-encoding');
+        cleanHeaders.delete('content-length');
+        return new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: cleanHeaders
+        });
+    }
     const template = await response.text();
     const html = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies);
     const {document} = parseHTML(html);
