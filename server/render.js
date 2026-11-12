@@ -23,7 +23,7 @@ function fillTemplate(template,lang,url,realPath,langData,cookies){
         .replaceAll("[[[CURRENT_URI]]]", escapeHTML(realPath.replace(/^\//,"")+url.search))
         .replaceAll("[[[ORIGINAL_URI]]]", escapeHTML(realPath.replace(/^\//,"")+cleanParams(url).search))
         .replaceAll("[[[LINK_REL_ALTERNATE]]]",generateAlternates(langData,lang,url,realPath))
-        .replaceAll("[[[META_THEME_COLOR]]]",generateThemes(cookies).replaceAll("[[[LIGHT_THEME_COLOR",light_theme_color).replaceAll("[[[DARK_THEME_COLOR",dark_theme_color))
+        .replaceAll("[[[META_THEME_COLOR]]]",generateThemes(cookies).replaceAll("[[[LIGHT_THEME_COLOR]]]",light_theme_color).replaceAll("[[[DARK_THEME_COLOR]]]",dark_theme_color))
         .replaceAll("[[[THEME]]]",cookies["schoolivate_theme"]||"system")
         .replaceAll("[[[LOADING_STYLES]]]",loadingSTYLES)
         .replaceAll("[[[LOADING_HTML]]]",loadingHTML)
