@@ -10,128 +10,68 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   
   <style>
-    :root {
-      --bg-wood: #1e130c;
-      --leather-dark: #2a1a10;
-      --leather-main: #3d2314;
-      --parchment-light: #fbf5e8;
-      --parchment-mid: #f3e9d2;
-      --parchment-dark: #e8d8b5;
-      --ink-dark: #2b2118;
-      --ink-subtle: #5a4b3c;
-      --gold-accent: #c59b27;
-      --gold-bright: #e5c158;
-      --burgundy: #6b2128;
-      --shadow-color: rgba(15, 8, 3, 0.4);
-    }
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      font-family: 'Lora', Georgia, serif;
-      background: #140d07;
-      background-image: 
-        radial-gradient(circle at 50% 50%, rgba(35, 22, 13, 0.8), rgba(12, 7, 3, 0.95)),
-        repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 2px, transparent 2px, transparent 4px);
+      background: whitesmoke;
       height: 100vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      color: var(--ink-dark);
-      position: relative;
-    }
-
-    body::before {
-      content: '';
-      position: absolute;
-      top: -10%;
-      left: 20%;
-      width: 60%;
-      height: 60%;
-      background: radial-gradient(circle, rgba(212, 175, 55, 0.07) 0%, rgba(0,0,0,0) 70%);
-      pointer-events: none;
-      z-index: 1;
+      color: #333;
     }
 
     header {
-      background: var(--leather-dark);
-      padding: 12px 35px;
+      background: #ffffff;
+      padding: 15px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 3px solid var(--gold-accent);
-      box-shadow: 0 4px 20px var(--shadow-color);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       z-index: 10;
-      position: relative;
     }
 
     .logo {
-      font-family: 'Cinzel', serif;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--gold-bright);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-shadow: 1px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(197, 155, 39, 0.3);
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
     .logo-icon {
-      width: 28px;
-      height: 28px;
-      fill: var(--gold-bright);
+      width: 24px;
+      height: 24px;
+      fill: #333;
     }
 
     .nav-buttons {
       display: flex;
-      gap: 15px;
+      gap: 10px;
     }
 
     .nav-buttons button {
-      background: #4a191d;
-      border: 1px solid var(--gold-accent);
-      color: var(--parchment-light);
-      padding: 10px 22px;
-      font-family: 'Cinzel', serif;
-      font-size: 0.9rem;
+      background: transparent;
+      border: 2px solid #4a90e2;
+      color: #4a90e2;
+      padding: 8px 18px;
+      margin-left: 10px;
+      border-radius: 20px;
       font-weight: 600;
-      letter-spacing: 1px;
       cursor: pointer;
-      position: relative;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 3px 6px rgba(0,0,0,0.4);
-      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), 50% 100%, 0 calc(100% - 8px));
-      padding-bottom: 16px;
+      transition: all 0.3s ease;
     }
 
-    .nav-buttons button:hover {
-      background: var(--burgundy);
-      color: #fff;
-      transform: translateY(2px);
-    }
-
+    .nav-buttons button:hover,
     .nav-buttons button.active {
-      background: var(--burgundy);
-      color: var(--gold-bright);
-      border-color: var(--gold-bright);
-      box-shadow: 0 5px 12px rgba(0,0,0,0.6);
-      transform: translateY(4px);
-    }
-
-    .nav-buttons button::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--gold-accent);
+      background: #4a90e2;
+      color: #ffffff;
     }
 
     .slider-container {
@@ -139,8 +79,7 @@
       display: flex;
       width: 200%;
       height: 100%;
-      transition: transform 0.75s cubic-bezier(0.77, 0, 0.175, 1);
-      z-index: 2;
+      transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
     }
 
     .slide {
@@ -149,172 +88,98 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 40px;
     }
 
     .book-container {
-      background: var(--parchment-light);
-      background-image: 
-        radial-gradient(circle at center, transparent 60%, rgba(139, 105, 20, 0.08) 100%),
-        linear-gradient(to right, rgba(0,0,0,0.08) 0%, transparent 5%, transparent 95%, rgba(0,0,0,0.08) 100%);
-      padding: 45px 40px;
-      border-radius: 6px 16px 16px 6px;
+      background: #ffffff;
+      padding: 40px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
       position: relative;
-      box-shadow: 
-        -10px 0 20px rgba(0,0,0,0.5),
-        15px 15px 35px rgba(0,0,0,0.7),
-        inset 0 0 40px rgba(184, 145, 80, 0.2);
-      border: 1px solid var(--parchment-dark);
-      border-left: 14px solid var(--leather-main);
-    }
-
-    .book-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -14px;
-      bottom: 0;
-      width: 4px;
-      background: var(--gold-accent);
-      box-shadow: 2px 0 5px rgba(0,0,0,0.5);
-    }
-
-    .book-container::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      border-width: 0 22px 22px 0;
-      border-style: solid;
-      border-color: var(--parchment-dark) #140d07;
-      box-shadow: -2px 2px 4px rgba(0,0,0,0.2);
-      display: block;
-      width: 0;
     }
 
     #homepage {
       text-align: center;
-      max-width: 520px;
-      width: 100%;
     }
 
     #homepage h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.3rem;
       margin-bottom: 15px;
-      color: var(--ink-dark);
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      border-bottom: 1px solid var(--gold-accent);
-      padding-bottom: 12px;
-      display: inline-block;
+      color: #333;
+      font-size: 2rem;
     }
 
     #homepage p {
-      margin-bottom: 30px;
-      color: var(--ink-subtle);
-      font-size: 1.15rem;
-      font-style: italic;
-      line-height: 1.6;
+      margin-bottom: 25px;
+      color: #666;
     }
 
     #login {
-      width: 100%;
-      max-width: 440px;
+      max-width: 400px;
     }
 
     #login h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.1rem;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       text-align: center;
-      color: var(--ink-dark);
-      letter-spacing: 0.5px;
-      position: relative;
-    }
-
-    #login h1::after {
-      font-size: 1rem;
-      display: block;
-      margin-top: 5px;
-      opacity: 0.7;
+      color: #333;
+      font-size: 1.8rem;
     }
 
     .form-group {
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 8px;
-      color: var(--ink-dark);
-      font-family: 'Cinzel', serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: #333;
+      font-weight: 500;
     }
 
     input {
       width: 100%;
-      padding: 10px 8px;
-      background: transparent;
+      padding: 8px 4px;
+      background: whitesmoke;
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
       outline: 0;
-      border: none;
-      border-bottom: 2px solid var(--ink-subtle);
-      font-family: 'Lora', serif;
-      font-size: 1.05rem;
-      color: var(--ink-dark);
-      transition: all 0.3s ease;
-      border-radius: 0;
+      border: 0;
+      border-bottom: 1px solid black;
+      transition: background 0.3s ease;
+      font-size: 1rem;
+      color: #333;
     }
 
     input:active,
     input:focus {
-      border-bottom: 2px solid var(--burgundy);
-      background: rgba(255, 255, 255, 0.4);
-      box-shadow: 0 4px 6px -2px rgba(107, 33, 40, 0.1);
+      border-bottom: 2px solid black;
+      background: lightgrey;
     }
 
     input:hover {
-      background: rgba(0, 0, 0, 0.02);
-      border-bottom-color: var(--ink-dark);
+      background: lightgrey;
     }
 
     .btn-action {
-      background: linear-gradient(135deg, #4a191d 0%, #6b2128 100%);
-      color: var(--parchment-light);
-      padding: 14px 28px;
-      border: 1px solid var(--gold-accent);
-      border-radius: 4px;
-      font-family: 'Cinzel', serif;
+      background: #4a90e2;
+      color: #fff;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 6px;
       font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
+      font-weight: bold;
       cursor: pointer;
       width: 100%;
-      margin-top: 15px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      text-transform: uppercase;
-      position: relative;
-      overflow: hidden;
+      margin-top: 10px;
+      transition: background 0.3s;
     }
 
     .btn-action:hover {
-      background: linear-gradient(135deg, #5c2025 0%, #822931 100%);
-      color: var(--gold-bright);
-      border-color: var(--gold-bright);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-      transform: translateY(-1px);
-    }
-
-    .btn-action:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      background: #357abd;
     }
 
     .toast-message {
@@ -322,14 +187,12 @@
       bottom: -100px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--leather-dark);
-      color: var(--gold-bright);
-      border: 1px solid var(--gold-accent);
-      padding: 14px 28px;
+      background: #333;
+      color: #fff;
+      padding: 12px 24px;
       border-radius: 6px;
-      font-family: 'Cinzel', serif;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-      transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      transition: bottom 0.4s ease;
       z-index: 100;
       display: flex;
       align-items: center;
@@ -341,36 +204,16 @@
     }
 
     .flourish {
-      font-size: 1.2rem;
-      color: var(--gold-accent);
+      color: #4a90e2;
       margin: 10px 0;
-      opacity: 0.8;
     }
 
     @media (max-width: 600px) {
       header {
         padding: 12px 15px;
       }
-      
-      .logo {
-        font-size: 1.3rem;
-      }
-
-      .nav-buttons button {
-        padding: 8px 14px;
-        font-size: 0.8rem;
-      }
-
       .slide {
         padding: 15px;
-      }
-
-      .book-container {
-        padding: 30px 20px;
-      }
-
-      #homepage h1 {
-        font-size: 1.8rem;
       }
     }
   </style>
@@ -394,9 +237,8 @@
     
     <section class="slide">
       <div id="homepage" class="book-container">
-        <div class="flourish">❦</div>
+        <div class="flourish">✦</div>
         <h1 id="hello">Welcome to Schoolivate</h1>
-        <div class="flourish" style="font-size: 0.9rem; margin: 5px 0 20px 0;">✧ ✦ ✧</div>
         <p>A refined sanctuary where thoughts are penned, stories are bound, and every opinion finds its rightful page.</p>
         <button class="btn-action" onclick="goToSlide(1)">Open Login Journal</button>
       </div>
@@ -407,8 +249,8 @@
         <h1 id="log">Member Login</h1>
         <form onsubmit="handleLogin(event)">
           <div class="form-group">
-            <label for="id">ID</label>
-            <input type="text" id="email" placeholder="Enter your ID" required />
+            <label for="email">Name</label>
+            <input type="text" id="email" placeholder="Enter your name" required />
           </div>
           <div class="form-group">
             <label for="password">Password</label>
@@ -422,7 +264,7 @@
   </div>
 
   <div id="toast" class="toast-message">
-    <span>📜</span>
+    <span>✨</span>
     <span id="toast-text">Successfully authenticated!</span>
   </div>
 
