@@ -107,7 +107,7 @@ export async function renderURL(url, request, langData, cookies){
             headers: cleanHeaders
         });
     }
-    const type=response.headers.get("content-type");
+    const type=response.headers.get("content-type")||"text/";
     const isText=isTextMime(type);
     const template=isText?await response.text():null;
     const data = isText?fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies):null;
