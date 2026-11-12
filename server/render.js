@@ -26,7 +26,7 @@ function fillTemplate(template,lang,url,realPath,langData,cookies){
         .replaceAll("[[[META_THEME_COLOR]]]",generateThemes(cookies).replaceAll("[[[LIGHT_THEME_COLOR]]]",light_theme_color).replaceAll("[[[DARK_THEME_COLOR]]]",dark_theme_color))
         .replaceAll("[[[THEME]]]",cookies["schoolivate_theme"]||"system")
         .replaceAll("[[[LOADING_STYLES]]]",loadingSTYLES)
-        .replaceAll("[[[LOADING_HTML]]]",loadingHTML)
+        .replaceAll("[[[LOADING_HTML]]]",loadingHTML);
 }
 function generateAlternates(langData,lang,url,realPath){
     function once(language, target){
@@ -113,8 +113,8 @@ export async function renderURL(url, request, langData, cookies){
     return new Response(document.toString(), {
         status: 200,
         headers: {
-          'Content-Type': 'text/html; charset=utf-8',
-          'Cache-Control': 'public, max-age=0, must-revalidate'
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'public, max-age=0, must-revalidate'
         }
     });
 }
