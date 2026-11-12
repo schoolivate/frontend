@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const routes = require("./renderable_routes.json");
 const fs = require('fs');
-const loadingData = fs.readFileSync('./loading.html', 'utf8');
+const loadingData = fs.readFileSync(import.meta.url.replace(/[^\/]+$/,"")+'/loading.html', 'utf8');
 const {loadingDocument} = parseHTML(loadingData);
 const [loadingHTML, loadingSTYLES] = [loadingDocument.querySelector("#loading-styles").innerHTML,loadingDocument.querySelector("#loading-html").innerHTML];
 function fillTemplate(template,lang,url,realPath,langData,cookies){
