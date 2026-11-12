@@ -15,6 +15,11 @@ const loadingDocument = parseHTML(loadingData).document;
 const [loadingSTYLES, loadingHTML] = [loadingDocument.querySelector("#loading-styles").innerHTML,loadingDocument.querySelector("#loading-html").innerHTML];
 const light_theme_color=loadingDocument.querySelector("#light-theme-color").getAttribute("content");
 const dark_theme_color=loadingDocument.querySelector("#dark-theme-color").getAttribute("content");
+const genericI18n = new I18N(null,{
+    getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
+    getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath.replace(/\/[^\/]+$/,"/")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
+    init_params:{}
+});
 function fillTemplate(template,lang,url,realPath,langData,cookies){
     return template
         .replaceAll("[[[LANG]]]",lang.code)
@@ -101,9 +106,10 @@ export async function renderURL(url, request, langData, cookies){
             headers: cleanHeaders
         });
     }
-    const isText=response.headers.get("content-type".startsWith("text/"));
-    const template = await response[isText?"text":"arrayBuffer"]();
-    const data = isText?fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies):template;
+    const type=response.headers.get("content-type");
+    const isText=(!type.startsWith("image/")&&!type.startsWith("video/")&&!type.startsWith("audio/")&&!type.startsWith("font/")&&!type.startsWith("multipart/")&&!type.startsWith("message/")&&!type.startsWith("audio/")&&!type.startsWith("application/"))||(type.startsWith("application/")&&type.endsWith("json"));
+    const template = isText?await response.text():null;
+    const data = isText?fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies):null;
     if(!hasFileExtension){
         const {document} = parseHTML(data);
         const i18n = new I18N(document,{
@@ -121,15 +127,10 @@ export async function renderURL(url, request, langData, cookies){
             }
         });
     } else if (isText) {
-        const i18n = new I18N(null,{
-            getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-            getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath.replace(/\/[^\/]+$/,"/")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
-            init_params:{}
-        });
-        const l = await i18n.getLanguageAsync(langUsed);
+        const l = await genericI18n.getLanguageAsync(langUsed);
         l.use();
         const localized=data.replace(/i18n=[^"\/']/g,m=>{
-            return i18n.resolve(m.replace(/^i18n=/,""));
+            return genericI18n.resolve(m.replace(/^i18n=/,""));
         });
         const genericHeaders = new Headers(response.headers);
         genericHeaders.delete('content-encoding');
