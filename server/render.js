@@ -23,7 +23,9 @@ function fillTemplate(template,lang,url,realPath,langData,cookies){
         .replaceAll("[[[CURRENT_URI]]]", escapeHTML(realPath.replace(/^\//,"")+url.search))
         .replaceAll("[[[ORIGINAL_URI]]]", escapeHTML(realPath.replace(/^\//,"")+cleanParams(url).search))
         .replaceAll("[[[LINK_REL_ALTERNATE]]]",generateAlternates(langData,lang,url,realPath))
-        .replaceAll("[[[META_THEME_COLOR]]]",generateThemes(cookies).replaceAll("[[[LIGHT_THEME_COLOR]]]",light_theme_color).replaceAll("[[[DARK_THEME_COLOR]]]",dark_theme_color))
+        .replaceAll("[[[META_THEME_COLOR]]]",generateThemes(cookies))
+        .replaceAll("[[[LIGHT_THEME_COLOR]]]",light_theme_color)
+        .replaceAll("[[[DARK_THEME_COLOR]]]",dark_theme_color)
         .replaceAll("[[[THEME]]]",cookies["schoolivate_theme"]||"system")
         .replaceAll("[[[LOADING_STYLES]]]",loadingSTYLES)
         .replaceAll("[[[LOADING_HTML]]]",loadingHTML);
@@ -101,15 +103,17 @@ export async function renderURL(url, request, langData, cookies){
         });
     }
     const template = await response.text();
-    const html = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies);
-    const {document} = parseHTML(html);
-    const i18n = new I18N(document,{
-        getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-        getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
-        init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)[langUsed]||{},
-    });
-    const l = await i18n.getLanguageAsync(langUsed);
-    l.use();
+    const data = fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies);
+    if(!hasFileExtension){
+        const {document} = parseHTML(data);
+        const i18n = new I18N(document,{
+            getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
+            getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
+            init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)[langUsed]||{},
+        });
+        const l = await i18n.getLanguageAsync(langUsed);
+        l.use();
+    }
     return new Response(document.toString(), {
         status: 200,
         headers: {
