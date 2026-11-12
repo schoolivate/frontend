@@ -13,6 +13,8 @@ const routes = require("./renderable_routes.json");
 const loadingData = fs.readFileSync(path.join(__dirname,"loading.html"), 'utf8');
 const loadingDocument = parseHTML(loadingData).document;
 const [loadingSTYLES, loadingHTML] = [loadingDocument.querySelector("#loading-styles").innerHTML,loadingDocument.querySelector("#loading-html").innerHTML];
+const light_theme_color=loadingDocument.querySelector("#light-theme-color").getAttribute("content");
+const dark_theme_color=loadingDocument.querySelector("#dark-theme-color").getAttribute("content");
 function fillTemplate(template,lang,url,realPath,langData,cookies){
     return template
         .replaceAll("[[[LANG]]]",lang.code)
@@ -21,7 +23,7 @@ function fillTemplate(template,lang,url,realPath,langData,cookies){
         .replaceAll("[[[CURRENT_URI]]]", escapeHTML(realPath.replace(/^\//,"")+url.search))
         .replaceAll("[[[ORIGINAL_URI]]]", escapeHTML(realPath.replace(/^\//,"")+cleanParams(url).search))
         .replaceAll("[[[LINK_REL_ALTERNATE]]]",generateAlternates(langData,lang,url,realPath))
-        .replaceAll("[[[META_THEME_COLOR]]]",generateThemes(cookies))
+        .replaceAll("[[[META_THEME_COLOR]]]",generateThemes(cookies).replaceAll("[[[LIGHT_THEME_COLOR",light_theme_color).replaceAll("[[[DARK_THEME_COLOR",dark_theme_color))
         .replaceAll("[[[THEME]]]",cookies["schoolivate_theme"]||"system")
         .replaceAll("[[[LOADING_STYLES]]]",loadingSTYLES)
         .replaceAll("[[[LOADING_HTML]]]",loadingHTML)
@@ -40,21 +42,21 @@ function generateThemes(cookies){
     const theme=cookies["schoolivate_theme"];
     if (theme&&theme!="system") {
         if (theme=="light") {
-            return `<meta name="theme-color" content="#ffffff" id="meta-theme-user-light"/>
-        <meta name="disabled-theme-color" content="#121212" id="meta-theme-user-dark"/>
-        <meta name="disabled-theme-color" content="#ffffff" media="(prefers-color-scheme: light)" id="meta-theme-system-light"/>
-        <meta name="disabled-theme-color" content="#121212" media="(prefers-color-scheme: dark)" id="meta-theme-system-dark"/>`;
+            return `<meta name="theme-color" content="[[[LIGHT_THEME_COLOR]]]" id="meta-theme-user-light"/>
+        <meta name="disabled-theme-color" content="[[[DARK_THEME_COLOR]]]" id="meta-theme-user-dark"/>
+        <meta name="disabled-theme-color" content="[[[LIGHT_THEME_COLOR]]]" media="(prefers-color-scheme: light)" id="meta-theme-system-light"/>
+        <meta name="disabled-theme-color" content="[[[DARK_THEME_COLOR]]]" media="(prefers-color-scheme: dark)" id="meta-theme-system-dark"/>`;
         } else if (theme=="dark") {
-            return `<meta name="disabled-theme-color" content="#ffffff" id="meta-theme-user-light"/>
-        <meta name="theme-color" content="#121212" id="meta-theme-user-dark"/>
-        <meta name="disabled-theme-color" content="#ffffff" media="(prefers-color-scheme: light)" id="meta-theme-system-light"/>
-        <meta name="disabled-theme-color" content="#121212" media="(prefers-color-scheme: dark)" id="meta-theme-system-dark"/>`;
+            return `<meta name="disabled-theme-color" content="[[[LIGHT_THEME_COLOR]]]" id="meta-theme-user-light"/>
+        <meta name="theme-color" content="[[[DARK_THEME_COLOR]]]" id="meta-theme-user-dark"/>
+        <meta name="disabled-theme-color" content="[[[LIGHT_THEME_COLOR]]]" media="(prefers-color-scheme: light)" id="meta-theme-system-light"/>
+        <meta name="disabled-theme-color" content="[[[DARK_THEME_COLOR]]]" media="(prefers-color-scheme: dark)" id="meta-theme-system-dark"/>`;
         } 
     } else {
-        return `<meta name="disabled-theme-color" content="#ffffff" id="meta-theme-user-light"/>
-        <meta name="disabled-theme-color" content="#121212" id="meta-theme-user-dark"/>
-        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" id="meta-theme-system-light"/>
-        <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" id="meta-theme-system-dark"/>`
+        return `<meta name="disabled-theme-color" content="[[[LIGHT_THEME_COLOR]]]" id="meta-theme-user-light"/>
+        <meta name="disabled-theme-color" content="[[[DARK_THEME_COLOR]]]" id="meta-theme-user-dark"/>
+        <meta name="theme-color" content="[[[LIGHT_THEME_COLOR]]]" media="(prefers-color-scheme: light)" id="meta-theme-system-light"/>
+        <meta name="theme-color" content="[[[DARK_THEME_COLOR]]]" media="(prefers-color-scheme: dark)" id="meta-theme-system-dark"/>`
     }
 }
 function escapeHTML(str){
