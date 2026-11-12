@@ -12,7 +12,7 @@ const require = createRequire(import.meta.url);
 const routes = require("./renderable_routes.json");
 const loadingData = fs.readFileSync(path.join(__dirname,"loading.html"), 'utf8');
 const loadingDocument = parseHTML(loadingData).document;
-const [loadingHTML, loadingSTYLES] = [loadingDocument.querySelector("#loading-styles").innerHTML,loadingDocument.querySelector("#loading-html").innerHTML];
+const [loadingSTYLES, loadingHTML] = [loadingDocument.querySelector("#loading-styles").innerHTML,loadingDocument.querySelector("#loading-html").innerHTML];
 function fillTemplate(template,lang,url,realPath,langData,cookies){
     return template
         .replaceAll("[[[LANG]]]",lang.code)
