@@ -1,10 +1,16 @@
 import { parseHTML } from 'linkedom';
 import { I18N, I18NLanguage } from "./i18n.js";
 import { createRequire } from "node:module";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename=fileURLToPath(import.meta.url);
+const __dirname=path.dirname(__filename);
+
 const require = createRequire(import.meta.url);
 const routes = require("./renderable_routes.json");
-const fs = require('fs');
-const loadingData = fs.readFileSync(import.meta.url.replace(/file:\/\/|[^\/]+$/g,"")+'loading.html', 'utf8');
+const loadingData = fs.readFileSync(path.join(__dirname,"loading.html"), 'utf8');
 const {loadingDocument} = parseHTML(loadingData);
 const [loadingHTML, loadingSTYLES] = [loadingDocument.querySelector("#loading-styles").innerHTML,loadingDocument.querySelector("#loading-html").innerHTML];
 function fillTemplate(template,lang,url,realPath,langData,cookies){
