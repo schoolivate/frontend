@@ -26,3 +26,22 @@ export function parseAcceptLanguage(header) {
     })
     .map(({ range, q }) => ({ range, q }));
 }
+export function isTextMime(mimeType) {
+    const baseType = mimeType.split(';')[0].trim().toLowerCase();
+    if (baseType.startsWith('text/')) return true;
+    const explicitTextApps = new Set([
+        'application/json',
+        'application/xml',
+        'application/javascript',
+        'application/ecmascript',
+        'application/x-javascript',
+        'application/xhtml+xml',
+        'application/rss+xml',
+        'application/atom+xml'
+    ]);
+    if (explicitTextApps.has(baseType)) return true;
+    if (baseType.endsWith('+json') || baseType.endsWith('+xml')) {
+        return true;
+    }
+    return false;
+}
