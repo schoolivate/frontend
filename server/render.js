@@ -1,5 +1,5 @@
 import { parseHTML } from 'linkedom';
-import { I18N, I18NLanguage } from "./i18n.js";
+import { I18N } from "./i18n.js";
 import { isTextMime } from "./utils.js";
 import { createRequire } from "node:module";
 import fs from "node:fs";
@@ -109,6 +109,7 @@ export async function renderURL(url, request, langData, cookies){
     }
     const type=response.headers.get("content-type");
     const isText=isTextMime(type);
+    const template=isText?await response.text():null;
     const data = isText?fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies):null;
     if(!hasFileExtension){
         const {document} = parseHTML(data);
