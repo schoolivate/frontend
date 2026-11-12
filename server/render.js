@@ -85,6 +85,10 @@ export async function renderURL(url, request, langData, cookies){
     const langUsed=url.pathname.match(/^\/\w+/)[0].slice(1);
     const headers = new Headers(request.headers);
     headers.set('x-internal-request', '1');
+    headers.delete('if-none-match');
+    headers.delete('if-modified-since');
+    headers.delete('host');
+    headers.delete('accept-encoding');
     const fetchOptions = {
       method: request.method,
       headers: headers
