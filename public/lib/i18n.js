@@ -501,7 +501,7 @@ class I18N{
             (el.dataset.i18n||"").split("|").filter(Boolean).forEach(stmt=>{
                 const parts=stmt.split("=");
                 if(parts.length!=2)return;
-                const [target,label]=parts;
+                const [target,label]=parts.map(p=>p.trim());
                 if (target==="text") el.textContent=this.resolve(label);
                 else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(label));
             });
@@ -569,7 +569,7 @@ class I18N{
         (el.dataset.i18n||"").split("|").filter(Boolean).forEach(stmt=>{
             const parts=stmt.split("=");
             if(parts.length!=2)return;
-            const [target,label]=parts;
+            const [target,label]=parts.map(p=>p.trim());
             if (target==="text") el.textContent=this.resolve(label);
             else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(label));
         });
