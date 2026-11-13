@@ -18,17 +18,18 @@ export default async function middleware(request) {
     var languageUsed = "";
     if (prefixes.includes(firstPathPart)) languageUsed = firstPathPart;
     const cookieHeader = (request.headers.get ? request.headers.get('cookie') : request.headers['cookie']) || "";
+    if (!languageUsed && languagelessPaths.includes(firstPathPart)) return;
+    else if (languageUsed && languagelessPaths.includes(secondPathPart)) {
+        url.pathname = pathname.replace(new RegExp("^\\/?" + languageUsed + "\\/?"), "/");
+        return Response.redirect(url, 302);
+    }
     const cookies = Object.fromEntries(
         cookieHeader.split(';').map(c => {
             const [key, ...v] = c.trim().split('=');
             return [key, v.join('=')];
         })
     )
-    if (!languageUsed && languagelessPaths.includes(firstPathPart)) return;
-    else if (languageUsed && languagelessPaths.includes(secondPathPart)) {
-        url.pathname = pathname.replace(new RegExp("^\\/?" + languageUsed + "\\/?"), "/");
-        return Response.redirect(url, 302);
-    } else if (languageUsed) return await renderURL(url, request, langData, cookies);
+    if (languageUsed) return await renderURL(url, request, langData, cookies);
     const cookieLang = cookies['schoolivate_lang'];
     if (cookieLang && prefixes.includes(cookieLang)) {
         url.pathname = `/${cookieLang}${pathname.startsWith("/") ? pathname : "/" + pathname}`;
