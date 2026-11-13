@@ -1,6 +1,6 @@
 import { parseHTML } from 'linkedom';
 import { I18N } from "./i18n.js";
-import { isTextMime } from "./utils.js";
+import { isTextMime, InternalCachedFetch } from "./utils.js";
 import { createRequire } from "node:module";
 import fs from "node:fs";
 import path from "node:path";
@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const __filename=fileURLToPath(import.meta.url);
 const __dirname=path.dirname(__filename);
-
+const icf = new InternalCachedFetch(40);
 const require = createRequire(import.meta.url);
 const routes = require("./renderable_routes.json");
 const loadingData = fs.readFileSync(path.join(__dirname,"loading.html"), 'utf8');
@@ -96,7 +96,7 @@ export async function renderURL(url, request, langData, cookies){
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       fetchOptions.body = request.body;
     }
-    const response = await fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
+    const response = await icf.fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
     if (["HEAD","OPTIONS"].includes(request.method)||!routes.public.includes(realPath)) {
         const cleanHeaders = new Headers(response.headers);
         cleanHeaders.delete('content-encoding');
@@ -114,7 +114,7 @@ export async function renderURL(url, request, langData, cookies){
         const {document} = parseHTML(data);
         const i18n = new I18N(document,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-            getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
+            getData:async code=>await(await icf.fetch("https://schoolivate.vercel.app"+realPath+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
             init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)[langUsed]||{}
         });
         const l = await i18n.getLanguageAsync(langUsed);
@@ -129,7 +129,7 @@ export async function renderURL(url, request, langData, cookies){
     } else if (isText) {
         const genericI18n = new I18N(null,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-            getData:async code=>await(await fetch("https://schoolivate.vercel.app"+realPath.replace(/\/[^\/]+$/,"/")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
+            getData:async code=>await(await icf.fetch("https://schoolivate.vercel.app"+realPath.replace(/\/[^\/]+$/,"/")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
             init_params:{}
         });
         const l = await genericI18n.getLanguageAsync(langUsed);

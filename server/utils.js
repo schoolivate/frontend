@@ -45,3 +45,71 @@ export function isTextMime(mimeType) {
     }
     return false;
 }
+export class InternalCachedFetch {
+  constructor(maxSizeMB = 20) {
+    this.maxSizeBytes = maxSizeMB * 1024 * 1024;
+    this.currentSizeBytes = 0;
+    this.cache = new Map();
+  }
+  #hasInternalHeader(headers) {
+    if (!headers) return false;
+    if (headers instanceof Headers) {
+      return headers.get('x-internal-request') === '1';
+    }
+    if (typeof headers === 'object') {
+      return Object.entries(headers).some(
+        ([key, value]) => key.toLowerCase() === 'x-internal-request' && String(value) === '1'
+      );
+    }
+    return false;
+  }
+  async fetch(url, options = {}) {
+    const method = (options.method || 'GET').toUpperCase();
+    const headers = options.headers || {};
+    const isInternal = this.#hasInternalHeader(headers);
+    if (!isInternal || method !== 'GET') {
+      return window.fetch(url, options);
+    }
+    const urlString = typeof url === 'string' ? url : url.url;
+    const cacheKey = `${method}:${urlString}`;
+    if (this.cache.has(cacheKey)) {
+      const entry = this.cache.get(cacheKey);
+      this.cache.delete(cacheKey);
+      this.cache.set(cacheKey, entry);
+      return new Response(entry.body, {
+        status: entry.status,
+        statusText: entry.statusText,
+        headers: new Headers(entry.headers)
+      });
+    }
+    const response = await window.fetch(url, options);
+    if (!response.ok) {
+      return response;
+    }
+    const clonedResponse = response.clone();
+    const bodyText = await clonedResponse.text();
+    const sizeBytes = new Blob([bodyText]).size;
+    if (sizeBytes > this.maxSizeBytes) {
+      return response;
+    }
+    while (this.currentSizeBytes + sizeBytes > this.maxSizeBytes && this.cache.size > 0) {
+      const oldestKey = this.cache.keys().next().value;
+      const oldestEntry = this.cache.get(oldestKey);
+      this.currentSizeBytes -= oldestEntry.size;
+      this.cache.delete(oldestKey);
+    }
+    const responseHeaders = {};
+    response.headers.forEach((val, key) => {
+      responseHeaders[key] = val;
+    });
+    this.cache.set(cacheKey, {
+      body: bodyText,
+      size: sizeBytes,
+      status: response.status,
+      statusText: response.statusText,
+      headers: responseHeaders
+    });
+    this.currentSizeBytes += sizeBytes;
+    return response;
+  }
+}
