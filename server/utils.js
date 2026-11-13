@@ -68,7 +68,7 @@ export class InternalCachedFetch {
     const headers = options.headers || {};
     const isInternal = this.#hasInternalHeader(headers);
     if (!isInternal || method !== 'GET') {
-      return window.fetch(url, options);
+      return fetch(url, options);
     }
     const urlString = typeof url === 'string' ? url : url.url;
     const cacheKey = `${method}:${urlString}`;
@@ -82,7 +82,7 @@ export class InternalCachedFetch {
         headers: new Headers(entry.headers)
       });
     }
-    const response = await window.fetch(url, options);
+    const response = await fetch(url, options);
     if (!response.ok) {
       return response;
     }
