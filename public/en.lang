@@ -1,14 +1,50 @@
 ;; ==========================================
 ;; Schoolivate - English Language File (en)
 ;; ==========================================
+<!page
+    ;; Page Metadata & SEO Labels
+    title = Schoolivate - Home
+    description = The official student-run platform for school announcements, activities, and community coordination.
 
-;; Page Metadata & SEO Labels
-page.title = Schoolivate - Home
-page.description = The official student-run platform for school announcements, activities, and community coordination.
+    ;; Open Graph (OG) Social Card Labels
+    og.title = Schoolivate - Home
+    og.description = The official student-run platform for school announcements, activities, and community coordination.
+    og.image.url = https://schoolivate.vercel.app/assets/images/og-cover.png
+    og.image.width = 1200
+    og.image.height = 630
 
-;; Open Graph (OG) Social Card Labels
-page.og.title = Schoolivate - Home
-page.og.description = The official student-run platform for school announcements, activities, and community coordination.
-page.og.image.url = https://schoolivate.vercel.app/assets/images/og-cover.png
-page.og.image.width = 1200
-page.og.image.height = 630
+    ;;JSON LD Data - Edit the title in @graph[2].name
+    jsonld=++{
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "Organization",
+                    "@id": "https://schoolivate.vercel.app/#organization",
+                    "name": "Schoolivate",
+                    "url": "https://schoolivate.vercel.app",
+                    "logo": "https://schoolivate.vercel.app/assets/images/logo.png"
+                },
+                {
+                    "@type": "WebSite",
+                    "@id": "https://schoolivate.vercel.app/#website",
+                    "url": "https://schoolivate.vercel.app",
+                    "name": "Schoolivate",
+                    "publisher": {
+                        "@id": "https://schoolivate.vercel.app/#organization"
+                    }
+                },
+                {
+                    "@type": "WebPage",
+                    "@id": "https://schoolivate.vercel.app/[[[LANG]]]/[[[CURRENT_URI]]]#webpage",
+                    "url": "https://schoolivate.vercel.app/[[[LANG]]]/[[[CURRENT_URI]]]",
+                    "name": "Schoolivate",
+                    "isPartOf": {
+                        "@id": "https://schoolivate.vercel.app/#website"
+                    },
+                    "about": {
+                        "@id": "https://schoolivate.vercel.app/#organization"
+                    }
+                }
+            ]
+        }++
+!>page

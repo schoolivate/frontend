@@ -2,9 +2,9 @@
 <html lang="[[[LANG]]]" dir="[[[DIR]]]" class="theme-[[[THEME]]]" translate="no">
     <head>
         <meta charset="UTF-8">
-        <title data-i18n-label="page.title" data-i18n-target="text"></title>
+        <title data-i18n="text=page.title"></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" data-i18n-label="page.description" data-i18n-target="attr-content">
+        <meta name="description" data-i18n="attr-content=page.description">
 
         <link rel="canonical" href="https://schoolivate.vercel.app/[[[LANG]]]/[[[ORIGINAL_URI]]]">
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -12,18 +12,18 @@
 
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://schoolivate.vercel.app/[[[LANG]]]/[[[CURRENT_URI]]]">
-        <meta property="og:title" data-i18n-label="page.og.title" data-i18n-target="attr-content">
-        <meta property="og:description" data-i18n-label="page.og.description" data-i18n-target="attr-content">
-        <meta property="og:image" data-i18n-label="page.og.image.url" data-i18n-target="attr-content">
-        <meta property="og:image:width" data-i18n-label="page.og.image.width" data-i18n-target="attr-content">
-        <meta property="og:image:height" data-i18n-label="page.og.image.height" data-i18n-target="attr-content">
+        <meta property="og:title" data-i18n="attr-content=page.og.title">
+        <meta property="og:description" data-i18n="attr-content=page.og.description">
+        <meta property="og:image" data-i18n="attr-content=page.og.image.url">
+        <meta property="og:image:width" data-i18n="attr-content=page.og.image.width">
+        <meta property="og:image:height" data-i18n="attr-content=page.og.image.height">
         <meta property="og:site_name" content="Schoolivate">
         <meta property="og:locale" content="[[[LANG_AREA]]]">
 
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" data-i18n-label="page.og.title" data-i18n-target="attr-content">
-        <meta name="twitter:description" data-i18n-label="page.og.description" data-i18n-target="attr-content">
-        <meta name="twitter:image" data-i18n-label="page.og.image.url" data-i18n-target="attr-content">
+        <meta name="twitter:title" data-i18n="attr-content=page.og.title">
+        <meta name="twitter:description" data-i18n="attr-content=page.og.description">
+        <meta name="twitter:image" data-i18n="attr-content=page.og.image.url">
 
         <link rel="icon" href="/assets/images/favicon.ico" sizes="any">
         <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
@@ -34,41 +34,7 @@
         <meta name="color-scheme" content="light dark" />
         [[[META_THEME_COLOR]]]
 
-        <script type="application/ld+json" data-i18n-label="page.title" data-i18n-target="replace">
-        {
-            "@context": "https://schema.org",
-            "@graph": [
-                {
-                    "@type": "Organization",
-                    "@id": "https://schoolivate.vercel.app/#organization",
-                    "name": "Schoolivate",
-                    "url": "https://schoolivate.vercel.app",
-                    "logo": "https://schoolivate.vercel.app/assets/images/logo.png"
-                },
-                {
-                    "@type": "WebSite",
-                    "@id": "https://schoolivate.vercel.app/#website",
-                    "url": "https://schoolivate.vercel.app",
-                    "name": "Schoolivate",
-                    "publisher": {
-                        "@id": "https://schoolivate.vercel.app/#organization"
-                    }
-                },
-                {
-                    "@type": "WebPage",
-                    "@id": "https://schoolivate.vercel.app/[[[LANG]]]/[[[CURRENT_URI]]]#webpage",
-                    "url": "https://schoolivate.vercel.app/[[[LANG]]]/[[[CURRENT_URI]]]",
-                    "name": "|||i18n-replace|||",
-                    "isPartOf": {
-                        "@id": "https://schoolivate.vercel.app/#website"
-                    },
-                    "about": {
-                        "@id": "https://schoolivate.vercel.app/#organization"
-                    }
-                }
-            ]
-        }
-        </script>
+        <script type="application/ld+json" data-i18n="text=page.jsonld"></script>
         <template id="i18n-init-vars">
             {
                 

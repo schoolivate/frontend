@@ -34,16 +34,21 @@ function clone(value) {
   }
   return result;
 }
-function parseData(input = "") {
+function parseData(input = "", options = {}) {
     const res = Object.create(null);
+    const warnings = options.warnings || [];
+    const onWarning = options.onWarning || ((w) => warnings.push(w));
+    if (options.warnings && !res.warnings) {
+        res.warnings = warnings;
+    }
     const lines = input.split("\n");
     const titleStack = [];
     let i = 0;
     function unescape(str) {
         let out = "";
         let esc = false;
-        for (let i = 0; i < str.length; i++) {
-            const c = str[i];
+        for (let j = 0; j < str.length; j++) {
+            const c = str[j];
             if (esc) {
                 out += c;
                 esc = false;
@@ -58,11 +63,13 @@ function parseData(input = "") {
     function stripComments(str) {
         let out = "";
         let esc = false;
-        for (let i = 0; i < str.length; i++) {
-            const c = str[i];
-            if (!esc && c === ";" && str[i + 1] === ";") break;
-            if (!esc && c === "\\") {
-                esc = true;
+        for (let j = 0; j < str.length; j++) {
+            const c = str[j];
+            if (!esc && c === ";" && str[j + 1] === ";") {
+                break;
+            }
+            if (c === "\\") {
+                esc = !esc;
                 out += c;
             } else {
                 esc = false;
@@ -73,23 +80,25 @@ function parseData(input = "") {
     }
     function findUnescapedEqual(str) {
         let esc = false;
-        for (let i = 0; i < str.length; i++) {
-            const c = str[i];
-            if (!esc && c === "=") return i;
+        for (let j = 0; j < str.length; j++) {
+            const c = str[j];
+            if (!esc && c === "=") return j;
             esc = (!esc && c === "\\");
         }
         return -1;
     }
     function findUnescapedPlusPlus(str) {
         let esc = false;
-        for (let i = 0; i < str.length - 1; i++) {
-            const c = str[i];
-            if (!esc && c === "+" && str[i + 1] === "+") return i;
+        for (let j = 0; j < str.length - 1; j++) {
+            const c = str[j];
+            if (!esc && c === "+" && str[j + 1] === "+") return j;
             esc = (!esc && c === "\\");
         }
         return -1;
     }
+    const ILLEGAL_KEY_CHARS = /['"|=,]/;
     while (i < lines.length) {
+        const lineNum = i + 1;
         let raw = lines[i];
         if (raw.endsWith("\r")) raw = raw.slice(0, -1);
         const trimmed = raw.trim();
@@ -98,48 +107,99 @@ function parseData(input = "") {
             continue;
         }
         if (trimmed.startsWith("<!")) {
-            const title=trimmed.slice(2).trim();
-            if (title) titleStack.push(title); 
+            const title = trimmed.slice(2).trim();
+            if (!title) {
+                onWarning({
+                    type: "EMPTY_SECTION",
+                    message: `Line ${lineNum}: Empty section header '<!'.`,
+                    line: lineNum
+                });
+            } else {
+                titleStack.push(title);
+            }
             i++;
             continue;
         }
         if (trimmed.startsWith("!>")) {
             const closing = trimmed.slice(2).trim();
             const idx = titleStack.lastIndexOf(closing);
-            if (idx !== -1&&closing) titleStack.length = idx;
+            if (idx !== -1 && closing) {
+                titleStack.length = idx;
+            } else {
+                onWarning({
+                    type: "UNMATCHED_CLOSING_SECTION",
+                    message: `Line ${lineNum}: Closing section '!> ${closing}' does not match any active section in stack.`,
+                    line: lineNum
+                });
+            }
             i++;
             continue;
         }
         const eq = findUnescapedEqual(raw);
         if (eq === -1) {
+            onWarning({
+                type: "MALFORMED_LINE",
+                message: `Line ${lineNum}: Line lacks an unescaped '=' separator and is not a comment or section tag. Skipped.`,
+                line: lineNum
+            });
             i++;
             continue;
         }
-        const key = unescape(raw.slice(0, eq)).trim();
+        const rawKey = raw.slice(0, eq);
+        const key = unescape(rawKey).trim();
+        if (!key) {
+            onWarning({
+                type: "EMPTY_KEY",
+                message: `Line ${lineNum}: Key is empty before '='. Skipped.`,
+                line: lineNum
+            });
+            i++;
+            continue;
+        }
+        if (ILLEGAL_KEY_CHARS.test(key)) {
+            throw new Error(`Fatal Translation Error at line ${lineNum}: Key "${key}" contains illegal characters ('"|=,).`);
+        }
         const rest = raw.slice(eq + 1);
         const mlStart = findUnescapedPlusPlus(rest);
+        let value = "";
         if (mlStart !== -1) {
-            let value = stripComments(rest.slice(mlStart + 2)) + "\n";
+            value = stripComments(rest.slice(mlStart + 2)) + "\n";
             i++;
+            let closed = false;
             while (i < lines.length) {
                 let l = lines[i];
                 if (l.endsWith("\r")) l = l.slice(0, -1);
                 const endIdx = findUnescapedPlusPlus(l);
                 if (endIdx !== -1) {
                     value += stripComments(l.slice(0, endIdx)) + "\n";
+                    closed = true;
                     break;
                 }
                 value += stripComments(l) + "\n";
                 i++;
             }
+            if (!closed) {
+                throw new Error(`Fatal Translation Error: Unclosed multiline block starting at line ${lineNum}. Missing closing '++'.`);
+            }
             i++;
             value = unescape(value).trimEnd();
-            res[titleStack.length ? titleStack.join(".") + "." + key : key] = value;
-            continue;
+        } else {
+            value = unescape(stripComments(rest)).trim();
+            i++;
         }
-        const value = unescape(stripComments(rest)).trim();
-        res[titleStack.length ? titleStack.join(".") + "." + key : key] = value;
-        i++;
+        const fullKey = titleStack.length ? titleStack.join(".") + "." + key : key;
+        if (Object.prototype.hasOwnProperty.call(res, fullKey)) {
+            onWarning({
+                type: "DUPLICATE_KEY",
+                message: `Line ${lineNum}: Duplicate key "${fullKey}" encountered. Overwriting previous value.`,
+                line: lineNum,
+                key: fullKey
+            });
+        }
+        res[fullKey] = value;
+    }
+    if (!options.warnings && warnings.length > 0) {
+        res.warnings = warnings;
     }
     return res;
 }
@@ -436,18 +496,15 @@ class I18N{
         return this.#resolveLabel(label,this.#currentLanguage.getRule(label));
     }
     updateAllElements(){
-        Array.from(document.querySelectorAll("[data-i18n-label]")).forEach(el=>{
-            const target=el.dataset.i18nTarget||"";
-            if (target=="replace") {
-                if(el.dataset.i18nOriginal){
-                    el.textContent=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
-                } else {
-                    el.dataset.i18nOriginal=el.textContent;
-                    el.textContent=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(el.dataset.i18nLabel));
-                }
-            } 
-            else if (target==="text") el.textContent=this.resolve(el.dataset.i18nLabel);
-            else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(el.dataset.i18nLabel));
+        if(!this.document) return;
+        Array.from(this.document.querySelectorAll("[data-i18n]")).forEach(el=>{
+            (el.dataset.i18n||"").split("|").filter(Boolean).forEach(stmt=>{
+                const parts=stmt.split("=");
+                if(parts.length!=2)return;
+                const [target,label]=parts;
+                if (target==="text") el.textContent=this.resolve(label);
+                else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(label));
+            });
         });
     }
     #resolveLabel(label, rule){
@@ -506,16 +563,16 @@ class I18N{
     setVariable(name,value){
         this.#variables[name]=String(value);
     }
-    createText(label,target="text",replaceValue=""){
-        const el=document.createElement("span");
-        el.dataset.i18nLabel=label;
-        el.dataset.i18nTarget=target;
-        if (target=="replace") {
-            el.dataset.i18nOriginal=replaceValue;
-            el.textContent=el.dataset.i18nOriginal.replaceAll("|||i18n-replace|||",this.resolve(label));
-        } 
-        else if (target==="text") el.textContent=this.resolve(label);
-        else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(label));
+    createText(stmts){
+        const el=this.document.createElement("span");
+        el.dataset.i18n=stmts;
+        (el.dataset.i18n||"").split("|").filter(Boolean).forEach(stmt=>{
+            const parts=stmt.split("=");
+            if(parts.length!=2)return;
+            const [target,label]=parts;
+            if (target==="text") el.textContent=this.resolve(label);
+            else if (target.startsWith("attr-")) el.setAttribute(target.replace(/^attr-/,""),this.resolve(label));
+        });
         return el;
     }
 }
