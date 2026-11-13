@@ -34,13 +34,8 @@ function clone(value) {
   }
   return result;
 }
-function parseData(input = "", options = {}) {
+function parseData(input = "") {
     const res = Object.create(null);
-    const warnings = options.warnings || [];
-    const onWarning = options.onWarning || ((w) => warnings.push(w));
-    if (options.warnings && !res.warnings) {
-        res.warnings = warnings;
-    }
     const lines = input.split("\n");
     const titleStack = [];
     let i = 0;
@@ -108,13 +103,7 @@ function parseData(input = "", options = {}) {
         }
         if (trimmed.startsWith("<!")) {
             const title = trimmed.slice(2).trim();
-            if (!title) {
-                onWarning({
-                    type: "EMPTY_SECTION",
-                    message: `Line ${lineNum}: Empty section header '<!'.`,
-                    line: lineNum
-                });
-            } else {
+            if (title) {
                 titleStack.push(title);
             }
             i++;
@@ -125,34 +114,18 @@ function parseData(input = "", options = {}) {
             const idx = titleStack.lastIndexOf(closing);
             if (idx !== -1 && closing) {
                 titleStack.length = idx;
-            } else {
-                onWarning({
-                    type: "UNMATCHED_CLOSING_SECTION",
-                    message: `Line ${lineNum}: Closing section '!> ${closing}' does not match any active section in stack.`,
-                    line: lineNum
-                });
             }
             i++;
             continue;
         }
         const eq = findUnescapedEqual(raw);
         if (eq === -1) {
-            onWarning({
-                type: "MALFORMED_LINE",
-                message: `Line ${lineNum}: Line lacks an unescaped '=' separator and is not a comment or section tag. Skipped.`,
-                line: lineNum
-            });
             i++;
             continue;
         }
         const rawKey = raw.slice(0, eq);
         const key = unescape(rawKey).trim();
         if (!key) {
-            onWarning({
-                type: "EMPTY_KEY",
-                message: `Line ${lineNum}: Key is empty before '='. Skipped.`,
-                line: lineNum
-            });
             i++;
             continue;
         }
@@ -188,18 +161,7 @@ function parseData(input = "", options = {}) {
             i++;
         }
         const fullKey = titleStack.length ? titleStack.join(".") + "." + key : key;
-        if (Object.prototype.hasOwnProperty.call(res, fullKey)) {
-            onWarning({
-                type: "DUPLICATE_KEY",
-                message: `Line ${lineNum}: Duplicate key "${fullKey}" encountered. Overwriting previous value.`,
-                line: lineNum,
-                key: fullKey
-            });
-        }
         res[fullKey] = value;
-    }
-    if (!options.warnings && warnings.length > 0) {
-        res.warnings = warnings;
     }
     return res;
 }
