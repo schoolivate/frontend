@@ -9,12 +9,32 @@
                 margin:0px;
                 padding:0px;
             }
+            .inert{
+                pointer-events: none;
+                user-select: none;
+                -webkit-user-drag: none;
+            }
+            #page-loading-screen{
+                width:100%;
+                height:100%;
+                position: fixed;
+                z-index: 1000;
+                touch-action: none;
+            }
+            #page-loading-screen-content-wrapper{
+                position: absolute;
+                top:50%;
+                left:50%;
+                translate:-50% -50%;
+            }
         </style>
     </head>
     <body id="loading-html">
         <div id="page-loading-screen">
-            <img src="/assets/loading_logo.png" id="page-loading-screen-logo">
-            <span data-i18n-label="loading.title" data-i18n-target="text" id="page-loading-screen-title"></span>
+            <div id="page-loading-screen-content-wrapper">
+                <img src="/assets/loading_logo.png" id="page-loading-screen-logo" data-i18n-label="page.loading.image.alt" data-i18n-target="attr-alt" class="inert">
+                <span data-i18n-label="loading.title" data-i18n-target="text" id="page-loading-screen-title"></span>
+            </div>
         </div>
     </body>
 </html>
