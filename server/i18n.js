@@ -447,7 +447,9 @@ export class I18N{
     updateAllElements(){
         if(!this.document) return;
         Array.from(this.document.querySelectorAll("[data-i18n]")).forEach(el=>{
+            console.log(el);
             (el.dataset.i18n||"").split("|").filter(Boolean).forEach(stmt=>{
+                console.log(stmt)
                 const parts=stmt.split("=");
                 if(parts.length!=2)return;
                 const [target,label]=parts.map(p=>p.trim());
