@@ -10,7 +10,7 @@ export default async function middleware(request) {
         return Response.redirect(url, 302);
     }
     const pathname = url.pathname;
-    const langData = cachedLangData || await (await fetch("https://schoolivate.vercel.app/assets/lang.config.json", { headers: { "x-internal-request": "1" } })).json();
+    const langData = cachedLangData ||= await (await fetch("https://schoolivate.vercel.app/assets/lang.config.json", { headers: { "x-internal-request": "1" } })).json();
     languagelessPaths = langData.languageless;
     const prefixes = langData.languages.map(lang => lang.code);
     const firstPathPart = url.pathname.split("/").filter(Boolean)[0] || "";

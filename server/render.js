@@ -134,7 +134,7 @@ export async function renderURL(url, request, langData, cookies){
         });
         const l = await genericI18n.getLanguageAsync(langUsed);
         l.use();
-        const localized=data.replace(/i18n=[^"\/']/g,m=>{
+        const localized=data.replace(/i18n=[^"\/']+/g,m=>{
             return genericI18n.resolve(m.replace(/^i18n=/,""));
         });
         const genericHeaders = new Headers(response.headers);
