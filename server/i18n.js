@@ -447,9 +447,7 @@ export class I18N{
     updateAllElements(){
         if(!this.document) return;
         Array.from(this.document.querySelectorAll("[data-i18n]")).forEach(el=>{
-            console.log(el);
-            (el.dataset.i18n||"").split("|").filter(Boolean).forEach(stmt=>{
-                console.log(stmt)
+            (el.getAttribute("data-i18n")||"").split("|").filter(Boolean).forEach(stmt=>{
                 const parts=stmt.split("=");
                 if(parts.length!=2)return;
                 const [target,label]=parts.map(p=>p.trim());
@@ -513,8 +511,8 @@ export class I18N{
     }
     createText(stmts){
         const el=this.document.createElement("span");
-        el.dataset.i18n=stmts;
-        (el.dataset.i18n||"").split("|").filter(Boolean).forEach(stmt=>{
+        el.setAttribute("data-i18n",stmts);
+        (el.getAttribute("data-i18n")||"").split("|").filter(Boolean).forEach(stmt=>{
             const parts=stmt.split("=");
             if(parts.length!=2)return;
             const [target,label]=parts.map(p=>p.trim());
