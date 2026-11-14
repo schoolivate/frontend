@@ -3,15 +3,15 @@
 ;; ==========================================
 <!page
     ;; Page Metadata & SEO Labels
-    title = Schoolivate - Home
-    description = The official student-run platform for school announcements, activities, and community coordination.
+    title=Schoolivate - Home
+    description=The official student-run platform for school announcements, activities, and community coordination.
 
     ;; Open Graph (OG) Social Card Labels
-    og.title = Schoolivate - Home
-    og.description = The official student-run platform for school announcements, activities, and community coordination.
-    og.image.url = https://schoolivate.vercel.app/assets/images/og-cover.png
-    og.image.width = 1200
-    og.image.height = 630
+    og.title=Schoolivate - Home
+    og.description=The official student-run platform for school announcements, activities, and community coordination.
+    og.image.url=https://schoolivate.vercel.app/assets/images/og-cover.png
+    og.image.width=1200
+    og.image.height=630
 
     ;;JSON LD Data - Edit the title in @graph[2].name
     jsonld=++{
@@ -48,3 +48,8 @@
             ]
         }++
 !>page
+<!manifest
+    name=Schoolivate
+    name.short=Schoolivate
+    description=The official student-run platform for school announcements, activities, and community coordination.
+!>manifest
