@@ -15,8 +15,8 @@ class Loader{
                     if (typeof part.onerror=="function") el.onerror=part.onerror;
                     if (typeof part.onload=="function"&&!part.sync) el.onload=part.onload;
                     else if (typeof part.onload=="function"&&part.sync) el.onload=async(event)=>{};
-                });
-            } 
+                }
+            });
         }
     }
 }
