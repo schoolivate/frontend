@@ -59,16 +59,20 @@ function parseData(input = "") {
         let esc = false;
         for (let j = 0; j < str.length; j++) {
             const c = str[j];
-            if (!esc && c === ";" && str[j + 1] === ";") {
-                break;
+            if (esc) {
+                out += c;
+                esc = false;
+                continue;
             }
             if (c === "\\") {
-                esc = !esc;
+                esc = true;
                 out += c;
-            } else {
-                esc = false;
-                out += c;
+                continue;
             }
+            if (c === ";" && str[j + 1] === ";") {
+                break;
+            }
+            out += c;
         }
         return out;
     }
