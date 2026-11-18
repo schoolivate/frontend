@@ -4,4 +4,3 @@ The public-facing production front-end source files for [Schoolivate](https://sc
 ---
 
 ## Structure
-+ todo...
