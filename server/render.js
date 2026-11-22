@@ -2,12 +2,10 @@ import { parseHTML } from 'linkedom';
 import { I18N } from "./i18n.js";
 import { isTextMime, getMimeType } from "./utils.js";
 import { createRequire } from "node:module";
-import fs from "node:fs";
-import path from "node:path";
 import renderables from "./renderable.js";
 
 const require = createRequire(import.meta.url);
-const routes = require("./renderable_routes.json");
+const routes = JSON.parse(renderables["renderable_routes.json"]);
 const loadingData = renderables["loading.html"];
 const loadingDocument = parseHTML(loadingData).document;
 const [loadingSTYLES, loadingHTML] = [loadingDocument.querySelector("#loading-styles").innerHTML,loadingDocument.querySelector("#loading-html").innerHTML];

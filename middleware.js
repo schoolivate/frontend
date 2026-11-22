@@ -1,10 +1,7 @@
 import { parseAcceptLanguage } from "./server/utils.js";
 import { renderURL } from "./server/render.js";
-import { createRequire } from "node:module";
 import renderables from "./server/renderable.js";
-const require = createRequire(import.meta.url);
-const routes = renderables["renderable_routes.json"];
-var cachedLangData = null;
+const routes = JSON.parse(renderables["renderable_routes.json"]);
 var languagelessPaths = ["assets"];
 export default async function middleware(request) {
     const url = new URL(request.url);
