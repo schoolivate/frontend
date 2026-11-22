@@ -3,7 +3,7 @@ import { renderURL } from "./server/render.js";
 import { createRequire } from "node:module";
 import renderables from "./server/renderable.js";
 const require = createRequire(import.meta.url);
-const routes = require("./renderable_routes.json");
+const routes = renderables["renderable_routes.json"];
 var cachedLangData = null;
 var languagelessPaths = ["assets"];
 export default async function middleware(request) {
