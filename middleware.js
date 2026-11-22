@@ -28,7 +28,7 @@ export default async function middleware(request) {
             return [key, v.join('=')];
         })
     )
-    if (languageUsed&&routes.includes(url.pathname.replace(/^[a-z]+/,"")||"/")) return await renderURL(url, request, langData, cookies);
+    if (languageUsed&&routes.includes(url.pathname.replace(/^\/[a-z]+/,"")||"/")) return await renderURL(url, request, langData, cookies);
     if (languageUsed) return;
     const cookieLang = cookies['schoolivate_lang'];
     if (cookieLang && prefixes.includes(cookieLang)) {
