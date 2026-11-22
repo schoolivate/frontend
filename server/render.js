@@ -95,7 +95,9 @@ export async function renderURL(url, request, langData, cookies){
         });
     }
     const isText=isTextMime(type);
-    const template=isText?renderables[hasFileExtension?realPath.replace(/^\//,""):realPath.replace(/^\/|\/$/,"")+"/index.html"]:null;
+    const filepath=hasFileExtension?realPath.replace(/^\//,""):realPath.replace(/^\/|\/$/,"")+"/index.html";
+    console.log(filepath);
+    const template=isText?renderables[filepath]:null;
     const data = isText?fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies):null;
     if(!hasFileExtension){
         const {document} = parseHTML(data);
