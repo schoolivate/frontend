@@ -86,19 +86,11 @@ export async function renderURL(url, request, langData, cookies){
     headers.delete('if-modified-since');
     headers.delete('host');
     headers.delete('accept-encoding');
-    const fetchOptions = {
-      method: request.method,
-      headers: headers
-    };
-    if (request.method !== 'GET' && request.method !== 'HEAD') {
-      fetchOptions.body = request.body;
-    }
     const p=realPath.split("/").filter(Boolean);
     var type="text/html";
     if(p.length>0&&p[p.length-1].includes(".")){
         type=getMimeType(p[p.length-1]);
     }
-    const response = await icf.fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
     if (["HEAD","OPTIONS"].includes(request.method)||!routes.includes(realPath)) {
         const cleanHeaders = new Headers(response.headers);
         cleanHeaders.delete('content-encoding');
