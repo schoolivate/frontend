@@ -96,7 +96,7 @@ export async function renderURL(url, request, langData, cookies){
     }
     const isText=isTextMime(type);
     const cleanPath = realPath.replace(/^\/+/, "");
-    const filePath = hasFileExtension
+    const filepath = hasFileExtension
     ? cleanPath
     : cleanPath === "" || cleanPath.endsWith("/")
         ? `${cleanPath}index.html`
