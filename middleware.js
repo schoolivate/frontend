@@ -31,11 +31,11 @@ export default async function middleware(request) {
     if (languageUsed&&routes.includes(url.pathname.replace(/^\/[^\/]+/,"")||"/")) return await renderURL(url, request, langData, cookies);
     if (languageUsed&&url.pathname.endsWith(".lang")) {
         const content=renderables[url.pathname.replace(/^\/[^\/]+\/?/,"")];
-        return content?new Response(content,{status:200}):new Response(null,{status:400});
+        return content?new Response(content,{status:200}):null;
     }
     if (url.pathname.endsWith(".lang")) {
         const content=renderables[url.pathname.replace(/^\//,"")];
-        return content?new Response(content,{status:200}):new Response(null,{status:400});
+        return content?new Response(content,{status:200}):null;
     }
     if (languageUsed) return;
     const cookieLang = cookies['schoolivate_lang'];
