@@ -52,6 +52,6 @@ export default async function middleware(request) {
     return Response.redirect(url, 302);
 }
 export const config = {
-    matcher: ['/:path*'],
+    matcher: ['/((?!assets(?:/|$)|lib(?:/|$)).*)'],
     runtime: "nodejs"
 };
