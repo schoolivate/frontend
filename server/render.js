@@ -1,6 +1,6 @@
 import { parseHTML } from 'linkedom';
 import { I18N } from "./i18n.js";
-import { isTextMime, InternalCachedFetch } from "./utils.js";
+import { isTextMime, getMimeType } from "./utils.js";
 import { createRequire } from "node:module";
 import fs from "node:fs";
 import path from "node:path";
@@ -92,9 +92,8 @@ export async function renderURL(url, request, langData, cookies){
         type=getMimeType(p[p.length-1]);
     }
     if (["HEAD","OPTIONS"].includes(request.method)||!routes.includes(realPath)) {
-        const cleanHeaders = new Headers(response.headers);
-        cleanHeaders.delete('content-encoding');
-        cleanHeaders.delete('content-length');
+        const cleanHeaders = new Headers();
+        cleanHeaders.set("content-type",type);
         return new Response(null, {
             status: 200,
             headers: cleanHeaders
@@ -107,7 +106,7 @@ export async function renderURL(url, request, langData, cookies){
         const {document} = parseHTML(data);
         const i18n = new I18N(document,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-            getData:async code=> renderables[realPath.replace(/^\//,"")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file],
+            getData:code=> renderables[realPath.replace(/^\//,"")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file],
             init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)[langUsed]||{}
         });
         const l = await i18n.getLanguageAsync(langUsed);
@@ -122,7 +121,7 @@ export async function renderURL(url, request, langData, cookies){
     } else if (isText) {
         const genericI18n = new I18N(null,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-            getData:async code=>renderables[realPath.replace(/^\/|\/[^\/]+$/,"")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file],
+            getData:code=>renderables[realPath.replace(/^\//,"").replace(/\/[^\/]+$/,"/")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file],
             init_params:{}
         });
         const l = await genericI18n.getLanguageAsync(langUsed);
@@ -130,18 +129,16 @@ export async function renderURL(url, request, langData, cookies){
         const localized=data.replace(/i18n=[^"\/']+/g,m=>{
             return genericI18n.resolve(m.replace(/^i18n=/,""));
         });
-        const genericHeaders = new Headers(response.headers);
-        genericHeaders.delete('content-encoding');
-        genericHeaders.delete('content-length');
+        const genericHeaders = new Headers();
+        genericHeaders.set("content-type",type);
         return new Response(localized, {
             status: 200,
             headers: genericHeaders
         });
     } else {
-        const genericHeaders = new Headers(response.headers);
-        genericHeaders.delete('content-encoding');
-        genericHeaders.delete('content-length');
-        return new Response(renderables[realPath.replace(/^\//,"")]y, {
+        const genericHeaders = new Headers();
+        genericHeaders.set("content-type",type);
+        return new Response(renderables[realPath.replace(/^\//,"")], {
             status: 200,
             headers: genericHeaders
         });
