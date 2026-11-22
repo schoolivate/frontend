@@ -7,6 +7,6 @@
     "linkedom": "^0.18.15"
     },
     "scripts":{
-        "prebuild":"node prebuild.js"
+        "build":"node prebuild.js"
     }
 }
