@@ -1,10 +1,7 @@
 import { parseHTML } from 'linkedom';
 import { I18N } from "./i18n.js";
 import { isTextMime, getMimeType } from "./utils.js";
-import { createRequire } from "node:module";
 import renderables from "./renderable.js";
-
-const require = createRequire(import.meta.url);
 const routes = JSON.parse(renderables["renderable_routes.json"]);
 const loadingData = renderables["loading.html"];
 const loadingDocument = parseHTML(loadingData).document;
@@ -98,7 +95,7 @@ export async function renderURL(url, request, langData, cookies){
         });
     }
     const isText=isTextMime(type);
-    const template=isText?renderables[realPath.replace(/^\//,"")]:null;
+    const template=isText?renderables[hasFileExtension?realPath.replace(/^\//,""):realPath.replace(/^\/|\/$/,"")+"/index.html"]:null;
     const data = isText?fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies):null;
     if(!hasFileExtension){
         const {document} = parseHTML(data);
