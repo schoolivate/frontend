@@ -1,7 +1,7 @@
 import { parseAcceptLanguage } from "./server/utils.js";
 import { renderURL } from "./server/render.js";
 import { createRequire } from "node:module";
-import renderables from "./renderable.js";
+import renderables from "./server/renderable.js";
 const require = createRequire(import.meta.url);
 const routes = require("./renderable_routes.json");
 var cachedLangData = null;
