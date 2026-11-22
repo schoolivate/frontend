@@ -2,7 +2,9 @@ import { parseAcceptLanguage } from "./server/utils.js";
 import { renderURL } from "./server/render.js";
 import renderables from "./server/renderable.js";
 const routes = JSON.parse(renderables["renderable_routes.json"]);
-var languagelessPaths = ["assets"];
+const langData = JSON.parse(renderables["lang.config.json"]);
+const languagelessPaths = langData.languageless;
+const prefixes = langData.languages.map(lang => lang.code);
 export default async function middleware(request) {
     const url = new URL(request.url);
     if (/(index.html|index.htm)\/*$/.test(url.pathname)) {
@@ -10,9 +12,6 @@ export default async function middleware(request) {
         return Response.redirect(url, 302);
     }
     const pathname = url.pathname;
-    const langData = renderables["lang.config.json"];
-    languagelessPaths = langData.languageless;
-    const prefixes = langData.languages.map(lang => lang.code);
     const firstPathPart = url.pathname.split("/").filter(Boolean)[0] || "";
     const secondPathPart = url.pathname.split("/").filter(Boolean)[1] || "";
     var languageUsed = "";
