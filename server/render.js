@@ -122,7 +122,7 @@ export async function renderURL(url, request, langData, cookies){
     } else if (isText) {
         const genericI18n = new I18N(null,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-            getData:code=>renderables[realPath.replace(/^\//,"").replace(/\/[^\/]+$/,"/")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file],
+            getData:code=>renderables[realPath.replace(/^\/+|[^/]+$/g, "") + langData.languages.find(l => l.code == code || l.code + "-" + l.region == code).lang_file],
             init_params:{}
         });
         const l = await genericI18n.getLanguageAsync(langUsed);
