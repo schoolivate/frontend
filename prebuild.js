@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-const INPUT_DIR = "./templates";
-const OUTPUT_FILE = "./server/templates.js";
+const INPUT_DIR = "./renderable";
+const OUTPUT_FILE = "./server/renderable.js";
 const matches = (filename) => true;
 async function collectFiles(directory) {
   const entries = await fs.readdir(directory, {

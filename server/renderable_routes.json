@@ -1,6 +1,4 @@
-{
-    "public":[
-        "/",
-        "/site.webmanifest"
-    ]
-}
+[
+    "/",
+    "/site.webmanifest"
+]

@@ -4,14 +4,11 @@ import { isTextMime, InternalCachedFetch } from "./utils.js";
 import { createRequire } from "node:module";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import renderables from "./renderable.js";
 
-const __filename=fileURLToPath(import.meta.url);
-const __dirname=path.dirname(__filename);
-const icf = new InternalCachedFetch(40);
 const require = createRequire(import.meta.url);
 const routes = require("./renderable_routes.json");
-const loadingData = fs.readFileSync(path.join(__dirname,"loading.html"), 'utf8');
+const loadingData = renderables["loading.html"];
 const loadingDocument = parseHTML(loadingData).document;
 const [loadingSTYLES, loadingHTML] = [loadingDocument.querySelector("#loading-styles").innerHTML,loadingDocument.querySelector("#loading-html").innerHTML];
 const light_theme_color=loadingDocument.querySelector("#light-theme-color").getAttribute("content");
@@ -97,28 +94,28 @@ export async function renderURL(url, request, langData, cookies){
       fetchOptions.body = request.body;
     }
     const p=realPath.split("/").filter(Boolean);
-    if(p.length>0){
-        //...
+    var type="text/html";
+    if(p.length>0&&p[p.length-1].includes(".")){
+        type=getMimeType(p[p.length-1]);
     }
     const response = await icf.fetch("https://schoolivate.vercel.app" + realPath, fetchOptions);
-    if (["HEAD","OPTIONS"].includes(request.method)||!routes.public.includes(realPath)) {
+    if (["HEAD","OPTIONS"].includes(request.method)||!routes.includes(realPath)) {
         const cleanHeaders = new Headers(response.headers);
         cleanHeaders.delete('content-encoding');
         cleanHeaders.delete('content-length');
-        return new Response(response.body, {
+        return new Response(null, {
             status: 200,
             headers: cleanHeaders
         });
     }
-    const type=response.headers.get("content-type")||"text/";
     const isText=isTextMime(type);
-    const template=isText?await response.text():null;
+    const template=isText?renderables[realPath.replace(/^\//,"")]:null;
     const data = isText?fillTemplate(template,langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies):null;
     if(!hasFileExtension){
         const {document} = parseHTML(data);
         const i18n = new I18N(document,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-            getData:async code=>await(await icf.fetch("https://schoolivate.vercel.app"+realPath+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
+            getData:async code=> renderables[realPath.replace(/^\//,"")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file],
             init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)[langUsed]||{}
         });
         const l = await i18n.getLanguageAsync(langUsed);
@@ -133,7 +130,7 @@ export async function renderURL(url, request, langData, cookies){
     } else if (isText) {
         const genericI18n = new I18N(null,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-            getData:async code=>await(await icf.fetch("https://schoolivate.vercel.app"+realPath.replace(/\/[^\/]+$/,"/")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file,{headers:{"x-internal-request":"1"}})).text(),
+            getData:async code=>renderables[realPath.replace(/^\/|\/[^\/]+$/,"")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file],
             init_params:{}
         });
         const l = await genericI18n.getLanguageAsync(langUsed);
@@ -145,15 +142,15 @@ export async function renderURL(url, request, langData, cookies){
         genericHeaders.delete('content-encoding');
         genericHeaders.delete('content-length');
         return new Response(localized, {
-            status: response.status,
+            status: 200,
             headers: genericHeaders
         });
     } else {
         const genericHeaders = new Headers(response.headers);
         genericHeaders.delete('content-encoding');
         genericHeaders.delete('content-length');
-        return new Response(response.body, {
-            status: response.status,
+        return new Response(renderables[realPath.replace(/^\//,"")]y, {
+            status: 200,
             headers: genericHeaders
         });
     }

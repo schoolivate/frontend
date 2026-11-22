@@ -1,16 +1,19 @@
 import { parseAcceptLanguage } from "./server/utils.js";
 import { renderURL } from "./server/render.js";
+import { createRequire } from "node:module";
+import renderables from "./renderable.js";
+const require = createRequire(import.meta.url);
+const routes = require("./renderable_routes.json");
 var cachedLangData = null;
 var languagelessPaths = ["assets"];
 export default async function middleware(request) {
-    if ((request.headers.get ? request.headers.get('x-internal-request') : request.headers['x-internal-request']) == "1") return;
     const url = new URL(request.url);
     if (/(index.html|index.htm)\/*$/.test(url.pathname)) {
         url.pathname = url.pathname.replace(/(index.html|index.htm)\/*$/, "");
         return Response.redirect(url, 302);
     }
     const pathname = url.pathname;
-    const langData = cachedLangData ||= await (await fetch("https://schoolivate.vercel.app/assets/lang.config.json", { headers: { "x-internal-request": "1" } })).json();
+    const langData = renderables["lang.config.json"];
     languagelessPaths = langData.languageless;
     const prefixes = langData.languages.map(lang => lang.code);
     const firstPathPart = url.pathname.split("/").filter(Boolean)[0] || "";
@@ -29,7 +32,8 @@ export default async function middleware(request) {
             return [key, v.join('=')];
         })
     )
-    if (languageUsed) return await renderURL(url, request, langData, cookies);
+    if (languageUsed&&routes.includes(url.pathname.replace(/^[a-z]+/,"")||"/")) return await renderURL(url, request, langData, cookies);
+    if (languageUsed) return;
     const cookieLang = cookies['schoolivate_lang'];
     if (cookieLang && prefixes.includes(cookieLang)) {
         url.pathname = `/${cookieLang}${pathname.startsWith("/") ? pathname : "/" + pathname}`;
