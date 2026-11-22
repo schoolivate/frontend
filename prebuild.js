@@ -34,3 +34,4 @@ await fs.writeFile(
   OUTPUT_FILE,
   `export default ${JSON.stringify(exports, null, 2)};\n`
 );
+console.log("cwd:",process.cwd());
