@@ -37,7 +37,7 @@ export default async function middleware(request) {
         const content=renderables[url.pathname.replace(/^\//,"")];
         return content?new Response(content,{status:200}):null;
     }
-    if (languageUsed&&url.pathname=="/lang.config.json") {
+    if (languageUsed&&url.pathname.match(/\/[^\/]\/lang\.config\.json/)) {
         const content=renderables["lang.config.json"];
         return content?new Response(content,{status:200}):null;
     }
