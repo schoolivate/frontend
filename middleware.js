@@ -37,6 +37,14 @@ export default async function middleware(request) {
         const content=renderables[url.pathname.replace(/^\//,"")];
         return content?new Response(content,{status:200}):null;
     }
+    if (languageUsed&&url.pathname=="/lang.config.json") {
+        const content=renderables["lang.config.json"];
+        return content?new Response(content,{status:200}):null;
+    }
+    if (url.pathname=="/lang.config.json") {
+        const content=renderables["lang.config.json"];
+        return content?new Response(content,{status:200}):null;
+    }
     if (languageUsed) return;
     const cookieLang = cookies['schoolivate_lang'];
     if (cookieLang && prefixes.includes(cookieLang)) {
