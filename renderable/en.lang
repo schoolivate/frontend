@@ -53,3 +53,6 @@
     name.short=Schoolivate
     description=The official student-run platform for school announcements, activities, and community coordination.
 !>manifest
+<!loading
+    title=Loading...
+!>loading
