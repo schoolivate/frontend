@@ -61,6 +61,112 @@
               --info-text: light-dark(#0369a1, #38bdf8);
               --info-border: light-dark(#bae6fd, rgba(14, 165, 233, 0.35));
             }
+            @supports not (color-scheme: light dark) {
+              :root {
+                /* 1. Surfaces (Light) */
+                --surface-canvas: #ffffff;
+                --surface-base: #f8fafc;
+                --surface-raised: #ffffff;
+                --surface-sunken: #f1f5f9;
+                --surface-hover: #e2e8f0;
+                --surface-active: #cbd5e1;
+                /* 2. Text & Foreground (Light) */
+                --text-primary: #0f172a;
+                --text-secondary: #475569;
+                --text-muted: #64748b;
+                --text-disabled: #94a3b8;
+                --text-on-solid: #ffffff;
+                /* 3. Borders & Focus (Light) */
+                --border-subtle: #e2e8f0;
+                --border-default: #cbd5e1;
+                --border-strong: #94a3b8;
+                --border-focus: #2563eb;
+                /* 4. Accent (Light) */
+                --accent-solid: #2563eb;
+                --accent-solid-hover: #1d4ed8;
+                --accent-solid-active: #1e40af;
+                --accent-on-solid: #ffffff;
+            
+                --accent-subtle: #eff6ff;
+                --accent-subtle-hover: #dbeafe;
+                --accent-subtle-active: #bfdbfe;
+                --accent-text: #1d4ed8;
+                --accent-border: #93c5fd;
+                /* 5. Status (Light) */
+                --success-bg: #ecfdf5;
+                --success-bg-hover: #d1fae5;
+                --success-text: #047857;
+                --success-border: #a7f3d0;
+            
+                --warning-bg: #fffbeb;
+                --warning-bg-hover: #fef3c7;
+                --warning-text: #b45309;
+                --warning-border: #fde68a;
+            
+                --danger-bg: #fef2f2;
+                --danger-bg-hover: #fee2e2;
+                --danger-text: #b91c1c;
+                --danger-border: #fecaca;
+            
+                --info-bg: #f0f9ff;
+                --info-bg-hover: #e0f2fe;
+                --info-text: #0369a1;
+                --info-border: #bae6fd;
+              }
+              @media (prefers-color-scheme: dark) {
+                :root {
+                  /* 1. Surfaces (Dark) */
+                  --surface-canvas: #0b0d10;
+                  --surface-base: #13171d;
+                  --surface-raised: #1a1f27;
+                  --surface-sunken: #0e1116;
+                  --surface-hover: #232a36;
+                  --surface-active: #2c3545;
+                  /* 2. Text & Foreground (Dark) */
+                  --text-primary: #f1f5f9;
+                  --text-secondary: #94a3b8;
+                  --text-muted: #64748b;
+                  --text-disabled: #475569;
+                  --text-on-solid: #ffffff;
+                  /* 3. Borders & Focus (Dark) */
+                  --border-subtle: #1e2530;
+                  --border-default: #2d3748;
+                  --border-strong: #475569;
+                  --border-focus: #60a5fa;
+                  /* 4. Accent (Dark) */
+                  --accent-solid: #3b82f6;
+                  --accent-solid-hover: #60a5fa;
+                  --accent-solid-active: #93c5fd;
+                  --accent-on-solid: #ffffff;
+            
+                  --accent-subtle: rgba(59, 130, 246, 0.14);
+                  --accent-subtle-hover: rgba(59, 130, 246, 0.22);
+                  --accent-subtle-active: rgba(59, 130, 246, 0.30);
+                  --accent-text: #93c5fd;
+                  --accent-border: rgba(96, 165, 250, 0.40);
+                  /* 5. Status (Dark) */
+                  --success-bg: rgba(16, 185, 129, 0.14);
+                  --success-bg-hover: rgba(16, 185, 129, 0.22);
+                  --success-text: #34d399;
+                  --success-border: rgba(16, 185, 129, 0.35);
+            
+                  --warning-bg: rgba(245, 158, 11, 0.14);
+                  --warning-bg-hover: rgba(245, 158, 11, 0.22);
+                  --warning-text: #fbbf24;
+                  --warning-border: rgba(245, 158, 11, 0.35);
+            
+                  --danger-bg: rgba(239, 68, 68, 0.14);
+                  --danger-bg-hover: rgba(239, 68, 68, 0.22);
+                  --danger-text: #f87171;
+                  --danger-border: rgba(239, 68, 68, 0.35);
+            
+                  --info-bg: rgba(14, 165, 233, 0.14);
+                  --info-bg-hover: rgba(14, 165, 233, 0.22);
+                  --info-text: #38bdf8;
+                  --info-border: rgba(14, 165, 233, 0.35);
+                }
+              }
+            }
             .inert{
                 pointer-events: none;
                 user-select: none;
