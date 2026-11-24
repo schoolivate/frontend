@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Symmetrical CSS Color Tokens Reference — Light &amp; Dark</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+
+      /* 1. Surfaces (elevation & containers only) */
+      --surface-canvas: light-dark(#ffffff, #0b0d10);
+      --surface-base: light-dark(#f8fafc, #13171d);
+      --surface-raised: light-dark(#ffffff, #1a1f27);
+      --surface-sunken: light-dark(#f1f5f9, #0e1116);
+      --surface-hover: light-dark(#e2e8f0, #232a36);
+      --surface-active: light-dark(#cbd5e1, #2c3545);
+
+      /* 2. Text & Foreground */
+      --text-primary: light-dark(#0f172a, #f1f5f9);
+      --text-secondary: light-dark(#475569, #94a3b8);
+      --text-muted: light-dark(#64748b, #64748b);
+      --text-disabled: light-dark(#94a3b8, #475569);
+      --text-on-solid: #ffffff;
+
+      /* 3. Borders & Focus */
+      --border-subtle: light-dark(#e2e8f0, #1e2530);
+      --border-default: light-dark(#cbd5e1, #2d3748);
+      --border-strong: light-dark(#94a3b8, #475569);
+      --border-focus: light-dark(#2563eb, #60a5fa);
+
+      /* 4. Accent (symmetric solid + subtle pairs) */
+      --accent-solid: light-dark(#2563eb, #3b82f6);
+      --accent-solid-hover: light-dark(#1d4ed8, #60a5fa);
+      --accent-solid-active: light-dark(#1e40af, #93c5fd);
+      --accent-on-solid: #ffffff;
+
+      --accent-subtle: light-dark(#eff6ff, rgba(59, 130, 246, 0.14));
+      --accent-subtle-hover: light-dark(#dbeafe, rgba(59, 130, 246, 0.22));
+      --accent-subtle-active: light-dark(#bfdbfe, rgba(59, 130, 246, 0.30));
+      --accent-text: light-dark(#1d4ed8, #93c5fd);
+      --accent-border: light-dark(#93c5fd, rgba(96, 165, 250, 0.40));
+
+      /* 5. Status (consistent bg / bg-hover / text / border per state) */
+      --success-bg: light-dark(#ecfdf5, rgba(16, 185, 129, 0.14));
+      --success-bg-hover: light-dark(#d1fae5, rgba(16, 185, 129, 0.22));
+      --success-text: light-dark(#047857, #34d399);
+      --success-border: light-dark(#a7f3d0, rgba(16, 185, 129, 0.35));
+
+      --warning-bg: light-dark(#fffbeb, rgba(245, 158, 11, 0.14));
+      --warning-bg-hover: light-dark(#fef3c7, rgba(245, 158, 11, 0.22));
+      --warning-text: light-dark(#b45309, #fbbf24);
+      --warning-border: light-dark(#fde68a, rgba(245, 158, 11, 0.35));
+
+      --danger-bg: light-dark(#fef2f2, rgba(239, 68, 68, 0.14));
+      --danger-bg-hover: light-dark(#fee2e2, rgba(239, 68, 68, 0.22));
+      --danger-text: light-dark(#b91c1c, #f87171);
+      --danger-border: light-dark(#fecaca, rgba(239, 68, 68, 0.35));
+
+      --info-bg: light-dark(#f0f9ff, rgba(14, 165, 233, 0.14));
+      --info-bg-hover: light-dark(#e0f2fe, rgba(14, 165, 233, 0.22));
+      --info-text: light-dark(#0369a1, #38bdf8);
+      --info-border: light-dark(#bae6fd, rgba(14, 165, 233, 0.35));
+    }
+
+    html[data-theme="light"] {
+      color-scheme: light;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--surface-canvas);
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      margin: 0 0 0.25rem;
+      font-size: 1.6rem;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .theme-switcher {
+      display: inline-flex;
+      background: var(--surface-sunken);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .theme-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .theme-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text-primary);
+    }
+
+    .theme-btn:active {
+      background: var(--surface-active);
+    }
+
+    .theme-btn[aria-pressed="true"] {
+      background: var(--surface-raised);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .theme-btn:focus-visible,
+    .btn-solid:focus-visible,
+    .btn-subtle:focus-visible,
+    .sample-input:focus-visible,
+    .state-tile:focus-visible,
+    .status-card:focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin: 0 0 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      border: 1px solid var(--border-default);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .token-name {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .token-role {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .surface-canvas { background: var(--surface-canvas); }
+    .surface-base { background: var(--surface-base); }
+    .surface-raised { background: var(--surface-raised); }
+    .surface-sunken { background: var(--surface-sunken); }
+
+    .state-tile {
+      width: 100%;
+      text-align: left;
+      background: var(--surface-base);
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
+      border-radius: 10px;
+      padding: 1rem;
+      cursor: pointer;
+    }
+
+    .state-tile:hover {
+      background: var(--surface-hover);
+    }
+
+    .state-tile:active {
+      background: var(--surface-active);
+    }
+
+    /* Typography Panel */
+    .panel {
+      background: var(--surface-base);
+      border: 1px solid var(--border-default);
+      border-radius: 10px;
+      padding: 1.25rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .type-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .type-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .text-primary-demo { color: var(--text-primary); font-weight: 600; }
+    .text-secondary-demo { color: var(--text-secondary); }
+    .text-muted-demo { color: var(--text-muted); }
+    .text-disabled-demo { color: var(--text-disabled); }
+
+    .solid-chip {
+      display: inline-block;
+      background: var(--accent-solid);
+      color: var(--text-on-solid);
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    /* Borders & Focus */
+    .border-subtle-box { border: 2px solid var(--border-subtle); background: var(--surface-base); }
+    .border-default-box { border: 2px solid var(--border-default); background: var(--surface-base); }
+    .border-strong-box { border: 2px solid var(--border-strong); background: var(--surface-base); }
+
+    .sample-input {
+      width: 100%;
+      max-width: 320px;
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-default);
+      background: var(--surface-raised);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    /* Accent Controls */
+    .accent-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .btn-solid {
+      background: var(--accent-solid);
+      color: var(--accent-on-solid);
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.05rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-solid:hover {
+      background: var(--accent-solid-hover);
+    }
+
+    .btn-solid:active {
+      background: var(--accent-solid-active);
+    }
+
+    .btn-subtle {
+      background: var(--accent-subtle);
+      color: var(--accent-text);
+      border: 1px solid var(--accent-border);
+      border-radius: 8px;
+      padding: 0.6rem 1.05rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-subtle:hover {
+      background: var(--accent-subtle-hover);
+    }
+
+    .btn-subtle:active {
+      background: var(--accent-subtle-active);
+    }
+
+    /* Interactive Status Cards */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .status-card {
+      text-align: left;
+      border-radius: 10px;
+      padding: 0.95rem 1rem;
+      border-width: 1px;
+      border-style: solid;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .status-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .status-meta {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.74rem;
+      opacity: 0.92;
+    }
+
+    .status-success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: var(--success-border);
+    }
+    .status-success:hover { background: var(--success-bg-hover); }
+
+    .status-warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border-color: var(--warning-border);
+    }
+    .status-warning:hover { background: var(--warning-bg-hover); }
+
+    .status-danger {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: var(--danger-border);
+    }
+    .status-danger:hover { background: var(--danger-bg-hover); }
+
+    .status-info {
+      background: var(--info-bg);
+      color: var(--info-text);
+      border-color: var(--info-border);
+    }
+    .status-info:hover { background: var(--info-bg-hover); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Symmetrical CSS Color Tokens</h1>
+        <p class="subtitle">Every surface, text, border, accent, and status token has a dedicated role and state pair.</p>
+      </div>
+      <div class="theme-switcher" role="group" aria-label="Theme mode">
+        <button class="theme-btn" type="button" data-theme-choice="system" aria-pressed="true">System</button>
+        <button class="theme-btn" type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+        <button class="theme-btn" type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+      </div>
+    </header>
+
+    <!-- 1. SURFACES -->
+    <section>
+      <h2>1. Surfaces (--surface-*)</h2>
+      <div class="grid">
+        <div class="card surface-canvas">
+          <span class="token-name">--surface-canvas</span>
+          <span class="token-role">Root viewport backdrop</span>
+        </div>
+        <div class="card surface-base">
+          <span class="token-name">--surface-base</span>
+          <span class="token-role">Default cards and panels</span>
+        </div>
+        <div class="card surface-raised">
+          <span class="token-name">--surface-raised</span>
+          <span class="token-role">Modals, popovers, active tabs</span>
+        </div>
+        <div class="card surface-sunken">
+          <span class="token-name">--surface-sunken</span>
+          <span class="token-role">Recessed wells and tracks</span>
+        </div>
+        <button class="state-tile" type="button">
+          <span class="token-name">--surface-hover / --surface-active</span>
+          <span class="token-role">Hover and press down to inspect</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. TEXT & FOREGROUND -->
+    <section>
+      <h2>2. Text &amp; Foreground (--text-*)</h2>
+      <div class="panel">
+        <div class="type-row">
+          <span class="text-primary-demo">Primary text — headings and core body copy</span>
+          <span class="token-name">--text-primary</span>
+        </div>
+        <div class="type-row">
+          <span class="text-secondary-demo">Secondary text — supporting labels and descriptions</span>
+          <span class="token-name">--text-secondary</span>
+        </div>
+        <div class="type-row">
+          <span class="text-muted-demo">Muted text — metadata, captions, placeholders</span>
+          <span class="token-name">--text-muted</span>
+        </div>
+        <div class="type-row">
+          <span class="text-disabled-demo">Disabled text — inactive controls or unavailable items</span>
+          <span class="token-name">--text-disabled</span>
+        </div>
+        <div class="type-row">
+          <span class="solid-chip">Text on solid fill</span>
+          <span class="token-name">--text-on-solid</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. BORDERS & FOCUS -->
+    <section>
+      <h2>3. Borders &amp; Focus (--border-*)</h2>
+      <div class="grid">
+        <div class="card border-subtle-box">
+          <span class="token-name">--border-subtle</span>
+          <span class="token-role">Soft dividers &amp; quiet edges</span>
+        </div>
+        <div class="card border-default-box">
+          <span class="token-name">--border-default</span>
+          <span class="token-role">Standard outlines &amp; fields</span>
+        </div>
+        <div class="card border-strong-box">
+          <span class="token-name">--border-strong</span>
+          <span class="token-role">High-contrast boundaries</span>
+        </div>
+        <div class="card surface-base">
+          <span class="token-name">--border-focus</span>
+          <label for="focus-check" class="token-role" style="display:block; margin-bottom:0.4rem;">Click or Tab into field:</label>
+          <input id="focus-check" class="sample-input" type="text" placeholder="Focus ring preview" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. ACCENT -->
+    <section>
+      <h2>4. Accent — Solid vs. Subtle (--accent-*)</h2>
+      <div class="panel">
+        <div class="accent-group">
+          <button class="btn-solid" type="button">Solid Accent (Hover &amp; Press)</button>
+          <button class="btn-subtle" type="button">Subtle Accent (Hover &amp; Press)</button>
+        </div>
+        <p class="token-role" style="margin:0;">
+          <strong>Solid pair:</strong> <code>--accent-solid</code>, <code>--accent-solid-hover</code>, <code>--accent-solid-active</code>, <code>--accent-on-solid</code><br />
+          <strong>Subtle pair:</strong> <code>--accent-subtle</code>, <code>--accent-subtle-hover</code>, <code>--accent-subtle-active</code>, <code>--accent-text</code>, <code>--accent-border</code>
+        </p>
+      </div>
+    </section>
+
+    <!-- 5. SEMANTIC STATUS -->
+    <section>
+      <h2>5. Semantic Status (--&lt;state&gt;-*)</h2>
+      <div class="status-grid">
+        <button class="status-card status-success" type="button">
+          <div class="status-title">Success (Hover me)</div>
+          <div class="status-meta">--success-bg / -bg-hover / -text / -border</div>
+        </button>
+        <button class="status-card status-warning" type="button">
+          <div class="status-title">Warning (Hover me)</div>
+          <div class="status-meta">--warning-bg / -bg-hover / -text / -border</div>
+        </button>
+        <button class="status-card status-danger" type="button">
+          <div class="status-title">Danger (Hover me)</div>
+          <div class="status-meta">--danger-bg / -bg-hover / -text / -border</div>
+        </button>
+        <button class="status-card status-info" type="button">
+          <div class="status-title">Info (Hover me)</div>
+          <div class="status-meta">--info-bg / -bg-hover / -text / -border</div>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll(".theme-btn");
+    const root = document.documentElement;
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const choice = btn.dataset.themeChoice;
+
+        if (choice === "system") {
+          root.removeAttribute("data-theme");
+        } else {
+          root.setAttribute("data-theme", choice);
+        }
+
+        buttons.forEach((b) => {
+          b.setAttribute("aria-pressed", String(b === btn));
+        });
+      });
+    });
+  </script>
+</body>
+</html>
