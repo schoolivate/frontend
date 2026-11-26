@@ -6,7 +6,7 @@ class Loader{
         this.#cacheBustLength=cacheBustLength||30;
     }
     async load(){
-        const i=0;
+        var i=0;
         for(part of this.#parts){
             await new Promise(async (resolve,reject)=>{
                 if (part.type=="script") {
@@ -55,6 +55,7 @@ class Loader{
             parsed.searchParams.append(this.#cacheBust.trim(),this.#generateCacheBust(this.#cacheBustLength));
             return parsed.toString();
         }
+        else return url;
     };
     #generateCacheBust(length=30){
         const a="abcdefghijklmnopqrstuvwxyz";
