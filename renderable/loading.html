@@ -231,6 +231,26 @@
                 user-select: none;
                 -webkit-user-drag: none;
             }
+            .loading-spinner{
+                display:inline-block;
+                user-select: none;
+                pointer-events: none;
+                aspect-ratio: 1;
+                width:1em;
+                border-radius: 50%;
+                border-color: var(--border-strong);
+                border-top-color: var(--accent-solid);
+                border-width: 3px;
+                animation: rotate 3s ease;
+            }
+            @keyframes rotate{
+                from{
+                    transform: rotate(0deg);
+                }
+                to{
+                    transform: rotate(360deg);
+                }
+            }
             #page-loading-screen{
                 width:100%;
                 height:100%;
@@ -249,8 +269,10 @@
     <body id="loading-html">
         <div id="page-loading-screen">
             <div id="page-loading-screen-content-wrapper">
-                <img src="/assets/loading_logo.png" id="page-loading-screen-logo" class="inert" inert alt="">
-                <span data-i18n="text=loading.title" id="page-loading-screen-title"></span>
+                <img src="/assets/loading_logo.png" id="page-loading-screen-logo" class="inert" alt="" aria-hidden="true">
+                <span id="page-loading-screen-title">
+                    <span class="loading-spinner" aria-hidden="true"></span><span data-i18n="text=loading.title"></span>
+                </span>
             </div>
         </div>
     </body>
