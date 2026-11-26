@@ -9,8 +9,16 @@
                 margin:0px;
                 padding:0px;
             }
-            :root {
+            :root, html.theme-system {
               color-scheme: light dark;
+            }
+            html.theme-light {
+              color-scheme: light;
+            }
+            html.theme-dark {
+              color-scheme: dark;
+            }
+            :root {
               /* 1. Surfaces */
               --surface-canvas: light-dark(#ffffff, #0b0d10);
               --surface-base: light-dark(#f8fafc, #13171d);
@@ -34,7 +42,7 @@
               --accent-solid-hover: light-dark(#1d4ed8, #60a5fa);
               --accent-solid-active: light-dark(#1e40af, #93c5fd);
               --accent-on-solid: #ffffff;
-              
+            
               --accent-subtle: light-dark(#eff6ff, rgba(59, 130, 246, 0.14));
               --accent-subtle-hover: light-dark(#dbeafe, rgba(59, 130, 246, 0.22));
               --accent-subtle-active: light-dark(#bfdbfe, rgba(59, 130, 246, 0.30));
@@ -61,8 +69,8 @@
               --info-text: light-dark(#0369a1, #38bdf8);
               --info-border: light-dark(#bae6fd, rgba(14, 165, 233, 0.35));
             }
-            @supports not (color-scheme: light dark) {
-              :root {
+            @supports not (color: light-dark(red, blue)) {
+              :root, html.theme-light {
                 /* 1. Surfaces (Light) */
                 --surface-canvas: #ffffff;
                 --surface-base: #f8fafc;
@@ -114,7 +122,7 @@
                 --info-border: #bae6fd;
               }
               @media (prefers-color-scheme: dark) {
-                :root {
+                :root:not(.theme-light) {
                   /* 1. Surfaces (Dark) */
                   --surface-canvas: #0b0d10;
                   --surface-base: #13171d;
@@ -165,6 +173,57 @@
                   --info-text: #38bdf8;
                   --info-border: rgba(14, 165, 233, 0.35);
                 }
+              }
+              html.theme-dark {
+                /* 1. Surfaces (Dark) */
+                --surface-canvas: #0b0d10;
+                --surface-base: #13171d;
+                --surface-raised: #1a1f27;
+                --surface-sunken: #0e1116;
+                --surface-hover: #232a36;
+                --surface-active: #2c3545;
+                /* 2. Text & Foreground (Dark) */
+                --text-primary: #f1f5f9;
+                --text-secondary: #94a3b8;
+                --text-muted: #64748b;
+                --text-disabled: #475569;
+                --text-on-solid: #ffffff;
+                /* 3. Borders & Focus (Dark) */
+                --border-subtle: #1e2530;
+                --border-default: #2d3748;
+                --border-strong: #475569;
+                --border-focus: #60a5fa;
+                /* 4. Accent (Dark) */
+                --accent-solid: #3b82f6;
+                --accent-solid-hover: #60a5fa;
+                --accent-solid-active: #93c5fd;
+                --accent-on-solid: #ffffff;
+            
+                --accent-subtle: rgba(59, 130, 246, 0.14);
+                --accent-subtle-hover: rgba(59, 130, 246, 0.22);
+                --accent-subtle-active: rgba(59, 130, 246, 0.30);
+                --accent-text: #93c5fd;
+                --accent-border: rgba(96, 165, 250, 0.40);
+                /* 5. Status (Dark) */
+                --success-bg: rgba(16, 185, 129, 0.14);
+                --success-bg-hover: rgba(16, 185, 129, 0.22);
+                --success-text: #34d399;
+                --success-border: rgba(16, 185, 129, 0.35);
+            
+                --warning-bg: rgba(245, 158, 11, 0.14);
+                --warning-bg-hover: rgba(245, 158, 11, 0.22);
+                --warning-text: #fbbf24;
+                --warning-border: rgba(245, 158, 11, 0.35);
+            
+                --danger-bg: rgba(239, 68, 68, 0.14);
+                --danger-bg-hover: rgba(239, 68, 68, 0.22);
+                --danger-text: #f87171;
+                --danger-border: rgba(239, 68, 68, 0.35);
+            
+                --info-bg: rgba(14, 165, 233, 0.14);
+                --info-bg-hover: rgba(14, 165, 233, 0.22);
+                --info-text: #38bdf8;
+                --info-border: rgba(14, 165, 233, 0.35);
               }
             }
             .inert{
