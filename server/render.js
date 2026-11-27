@@ -107,7 +107,7 @@ export async function renderURL(url, request, langData, cookies){
         const {document} = parseHTML(data);
         const i18n = new I18N(document,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-            getData:code=> renderables[realPath.replace(/^\//,"")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file],
+            getData:code=> fillTemplate(renderables[realPath.replace(/^\//,"")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file],langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies),
             init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)?.[langUsed]||{}
         });
         const l = await i18n.getLanguageAsync(langUsed);
@@ -122,7 +122,7 @@ export async function renderURL(url, request, langData, cookies){
     } else if (isText) {
         const genericI18n = new I18N(null,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
-            getData:code=>renderables[realPath.replace(/^\/+|[^/]+$/g, "") + langData.languages.find(l => l.code == code || l.code + "-" + l.region == code).lang_file],
+            getData:code=>fillTemplate(renderables[realPath.replace(/^\/+|[^/]+$/g, "") + langData.languages.find(l => l.code == code || l.code + "-" + l.region == code).lang_file],langData.languages.find(lang=>lang.code==langUsed||lang.code+"-"+lang.region==langUsed),url,realPath,langData,cookies),
             init_params:{}
         });
         const l = await genericI18n.getLanguageAsync(langUsed);
