@@ -108,7 +108,7 @@ export async function renderURL(url, request, langData, cookies){
         const i18n = new I18N(document,{
             getSupport:code=>Boolean(langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code)),
             getData:code=> renderables[realPath.replace(/^\//,"")+langData.languages.find(lang=>lang.code==code||lang.code+"-"+lang.region==code).lang_file],
-            init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)[langUsed]||{}
+            init_params:JSON.parse(document.getElementById("i18n-init-vars").innerText)?.[langUsed]||{}
         });
         const l = await i18n.getLanguageAsync(langUsed);
         l.use();
